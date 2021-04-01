@@ -1,0 +1,41 @@
+{% extends 'base_simple-heading.html' %}
+
+<!-- title -->
+{% block title %}Edit Account{% endblock %}
+
+<!-- heading and greeting -->
+{% block heading %}Account Settings{% endblock %}
+{% block greeting %}{% endblock %}
+
+<!-- page content -->
+{% block body %}
+
+<div class="container d-flex justify-content-center my-5">
+  
+  <!-- account settings form -->
+  <div class="row col-12 border border-1 border-light rounded shadow-lg p-3">
+    
+
+    <form method="POST">
+      {% include '_edit_account_settings_form.html' %}
+  
+      <!-- form buttons -->
+      <div class="d-flex justify-content-center">
+        <div>
+          <button type="submit" class="btn btn-primary btn">Submit</button>
+          <a href="/home" class="btn btn-outline-secondary" role="button">Return Home</a>
+          <a href="/user/delete" class=""><i>Delete account?</i></a>
+        </div>  
+      </div>
+
+    </form>
+  </div>
+
+</div>
+
+{% endblock %}
+
+
+{% block page_scripts %}
+  <script src="{{ url_for('auth_bp.static', filename='account_settings.js') }}"></script>
+{% endblock %}

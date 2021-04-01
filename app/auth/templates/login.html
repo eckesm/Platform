@@ -1,0 +1,30 @@
+{% extends 'base_simple-heading.html' %}
+
+<!-- title -->
+{% block title %}Login{% endblock %}
+
+<!-- heading and greeting -->
+{% block heading %}Log In{% endblock %}
+{% block greeting %}{{greeting}}{% endblock %}
+
+<!-- page content -->
+{% block body %}
+
+<div class="container d-flex justify-content-center my-5">
+  
+  <!-- login form -->
+  <div class="row col-12 col-sm-10 col-md-8 col-lg-6 col-xl-5 border border-1 border-light rounded shadow-lg px-3 py-4">
+
+    <form id="login_form" method="POST">
+      {% include '_login_form.html' %}
+    </form>
+
+  </div>
+</div>
+
+{% endblock %}
+
+<!-- scripts -->
+{% block page_scripts %}
+<script src="{{ url_for('auth_bp.static', filename='login.js') }}"></script>
+{% endblock %}

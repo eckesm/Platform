@@ -1,0 +1,90 @@
+#members-bar {
+	height: 112px;
+	overflow-x: auto;
+	overflow-y: hidden;
+	white-space: nowrap;
+	vertical-align: middle;
+}
+
+#members-bar .member-card {
+	width: 82px;
+	height: 95px;
+	margin-left: 3px;
+	margin-right: 3px;
+	padding: 0px;
+	text-align: center;
+	vertical-align: middle;
+	display: inline-block;
+}
+
+#members-bar .member-card .profile-picture {
+	object-fit: cover;
+	border-radius: 50%;
+	height: 75px;
+	width: 75px;
+	padding: 0px;
+	margin-top: 3px;
+}
+
+#members-bar .member-card .profile-name {
+	font-size: 12px;
+	overflow-x: hidden;
+	text-align: center;
+	padding: 0px;
+	margin: 0px;
+}
+
+/* .members_messages {
+	height: 80vh;
+	min-height: 200px;
+}
+
+.members_outer {
+	overflow-y: auto;
+	max-height: 88%;
+}
+
+.members_module {
+	display: flex;
+	flex-flow: column;
+} */
+
+#messages-module {
+	height: 675px;
+	/* height: 80vh; */
+	/* min-height: 500px; */
+}
+
+#new-message {
+	height: 50px;
+	margin-top: 5px;
+	margin-bottom: 5px;
+}
+
+#messages-scroll {
+	overflow-y: auto;
+	/* max-height: 85%; */
+	height: 595px;
+}
+
+#messages-container {
+	display: flex;
+	flex-flow: column;
+}
+
+.post .post-author {
+	font-size: 0.85rem;
+}
+
+.post .post-datetime {
+	font-size: 0.70rem;
+}
+
+.post .post-text {
+	font-size: 1.0rem;
+}
+
+.post .profile-picture {
+	object-fit: cover;
+	border-radius: 50%;
+}

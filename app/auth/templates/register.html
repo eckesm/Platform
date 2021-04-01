@@ -1,0 +1,30 @@
+{% extends 'base_simple-heading.html' %}
+
+<!-- title -->
+{% block title %}New User{% endblock %}
+
+<!-- heading and greeting -->
+{% block heading %}New User Sign-Up{% endblock %}
+{% block greeting %}{{greeting}}{% endblock %}
+
+<!-- page content -->
+{% block body %}
+
+<div class="container d-flex justify-content-center mt-3 mb-5">
+  
+  <!-- new user form -->
+  <div class="row col-12 border border-1 border-light rounded shadow-lg p-3">
+
+    <form method="POST">
+      {% include '_registration_form.html' %}
+    </form>
+
+  </div>
+</div>
+
+{% endblock %}
+
+{% block page_scripts %}
+  <!-- <script src="/static/new_user.js"></script> -->
+  <script src="{{ url_for('auth_bp.static', filename='account_settings.js') }}"></script>
+{% endblock %}

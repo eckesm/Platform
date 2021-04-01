@@ -1,0 +1,15 @@
+#profile-heading{
+    width:100%;
+    text-align: center;
+}
+
+#profile-picture {
+    width: 200px;
+	height: 200px;
+	border-radius: 50%;
+	object-fit: cover;
+	border: 5px solid white;
+	padding: 0px;
+	margin-bottom: 15px;
+	display: inline-block;
+}

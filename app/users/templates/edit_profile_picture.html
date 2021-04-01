@@ -1,0 +1,54 @@
+{% extends 'base_simple-heading.html' %}
+{% block page_styles %}
+<link rel="stylesheet" href="{{ url_for('users_bp.static', filename='edit_profile_picture.css') }}" type="text/css">
+{% endblock %}
+
+<!-- title -->
+{% block title %}Edit Profile Picture{% endblock %}
+
+<!-- heading and greeting -->
+{% block heading %}Edit Profile Picture{% endblock %}
+{% block greeting %}{% endblock %}
+
+<!-- page content -->
+{% block body %}
+  
+  <div id="profile-heading">
+      <img id="profile-picture" src="{{user.profile_image_url}}" alt="{{user.full_name}}">
+  </div>
+
+  <!-- edit profile form -->
+  <div class="row border border-1 border-light rounded shadow-lg p-3">
+    
+    <form method="POST" action="/user/profile-picture" enctype=multipart/form-data>
+
+      <!-- CSRF Token -->
+      {{ form.hidden_tag() }}
+
+      <!-- profile url -->
+      <div>  
+        {{form.profile_url(class_='form-control', placeholder='Profile URL')}}
+
+        {% for err in form.profile_url.errors %}
+        <span class="badge rounded-pill bg-danger me-1 text-wrap">{{err}}</span>
+        {% endfor %}
+      </div>
+
+      <!-- form buttons -->
+      <div class="d-flex justify-content-center mt-3">
+        <div>
+          <input class="btn btn-outline-primary" type=submit value=Upload>
+          <a href="/home" class="btn btn-outline-secondary" role="button">Return Home</a>
+        </div>
+      </div>
+
+    </form>
+
+
+  </div>
+</div>
+    
+{% endblock %}
+
+
+{% block page_scripts %}{% endblock %}

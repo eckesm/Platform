@@ -1,0 +1,19 @@
+<!-- CSRF Token -->
+{{ form.hidden_tag() }}
+
+<div class="d-flex justify-content-between align-items-center">
+
+	<!-- content -->
+	<div class="col-12 d-flex">
+		<div class="col-12 input-group">
+			{{form.content(class_="form-control", placeholder="What do you want to say to the group?")}}
+			<button class="btn btn-outline-primary btn-lg" type="submit">Send</button>
+		</div>
+
+		{% for err in form.content.errors %}
+		<span class="badge rounded-pill bg-danger me-1 text-wrap">{{err}}</span>
+		{% endfor %}
+	
+	</div>
+
+</div>

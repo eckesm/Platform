@@ -1,0 +1,38 @@
+{% extends 'base_simple-heading.html' %}
+
+<!-- title -->
+{% block title %}Delete Account?{% endblock %}
+
+<!-- heading and greeting -->
+{% block heading %}Confirm Delete{% endblock %}
+{% block greeting %}greeting{% endblock %}
+
+<!-- page content -->
+{% block body %}
+<div class="container d-flex justify-content-center my-5">
+
+  <!-- edit account settings form -->
+  <div class="row col-12 col-sm-11 col-md-10 col-lg-9 col-xl-8 border border-1 border-light rounded shadow-lg p-3">
+    
+    <form method="POST" action="/user/delete">
+      <div class="row align-items-top my-2">
+        
+        <p>Are you sure you would like to delete your account?  Any groups you own will also be deleted.  This action cannot be undone. </p>
+
+      </div>
+      <hr>
+      
+      <!-- form buttons -->
+      <div class="d-flex justify-content-center">
+        <button type="submit" class="btn btn-danger btn m-1">Yes, delete my account</button>
+        <a href="/home" class="btn btn-outline-secondary m-1" role="button">Nevermind... I would like to keep my account for now</a>
+      </div>
+
+    </form>
+  </div>
+
+</div>
+    
+{% endblock %}
+
+{% block page_scripts %}{% endblock %}

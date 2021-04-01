@@ -1,0 +1,112 @@
+{% extends 'EUROVISION_API.html' %}
+
+<!-- title -->
+{% block title %}Countries{% endblock %}
+
+<!-- heading -->
+{% block heading %}API Updates{% endblock %}
+
+
+<!-- page content -->
+{% block body %}
+
+<ul class="nav nav-tabs">
+  <li class="nav-item">
+    <a class="nav-link active" aria-current="page" href="/eurovision/manage/countries">Countries</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href=/eurovision/manage/participants>Participants</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="/eurovision/manage/entries">Entries</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="/eurovision/manage/events">Events</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="/eurovision/manage/performances">Performances</a>
+  </li>
+</ul>
+
+<div class="container d-flex justify-content-center justify-content-lg-start my-5 border p-3">
+
+  <div class="row col-12">
+    <p class="fs-3">Countries</p>
+    
+    <div class="col-md-6">
+      <!-- country form -->
+      <form id="country_form" action="" method="post">
+
+        <!-- CSRF Token -->
+        {{ form.hidden_tag() }}
+    
+        <!-- country select -->
+        <div class="input-group my-1 ">
+          <span class="input-group-text">Country</span>
+          <select id='country_select' class="form-select bg-info text-dark">
+            <option value="add_new_country" selected>-- Add new country --</option>
+            {% for country in countries %}
+              {% if selected_country and country[0] == selected_country['id'] %}
+              <option value="{{ country[0] }}" selected>{{ country[1] }}</option>
+              {% else %}
+              <option value="{{ country[0] }}">{{ country[1] }}</option>
+              {% endif %}
+            {% endfor %}
+          </select>
+        </div>
+        
+        <!-- country id -->
+        <div class="input-group my-1">
+          <span class="input-group-text">ID</span>
+          <input type="text" class="form-control" id="country_id" name="country_id" 
+          {% if form.country_id.data %}
+          value="{{ form.country_id.data }}""
+          {% endif %}
+          {% if selected_country %} disabled {% endif %}>
+        </div>
+    
+        <!-- country name -->
+        <div class="input-group my-1">
+          <span class="input-group-text">Country</span>
+          {{ form.country_name(class_="form-control") }}
+        </div>
+    
+        <!-- flag url -->
+        <div class="input-group my-1">
+          <span class="input-group-text">Flag image url</span>
+          {{ form.flag_image_url(class_="form-control") }}
+        </div>
+      
+      </form>
+    </div>
+    
+    <!-- flag image -->
+    {% if selected_country and selected_country['flag_image_url'] %}
+    <div class="col-md-6 mt-3 mt-md-0">
+      <img id="flag_image" src="{{ selected_country['flag_image_url'] }}" alt="flag of {{ selected_country['country'] }}">
+    </div>
+    {% endif %}
+    
+    <!-- buttons -->
+    <div class="mt-3 mt-md-1">
+      <button id="add_country_btn" class="btn btn-primary"
+      {% if selected_country %} disabled {% endif %}
+      >Add</button>
+    
+      <button id="update_country_btn" class="btn btn-primary"
+      {% if not selected_country %} disabled {% endif %}
+      >Update</button>
+    
+      <button id="delete_country_btn" class="btn btn-danger"
+      {% if not selected_country %} disabled {% endif %}
+      >Delete</button>
+    </div>
+
+  </div>
+
+</div>
+{% endblock %}
+
+{% block page_scripts %}
+<script src="{{ url_for('eurovision_bp.static', filename='country_form.js') }}"></script>
+{% endblock %}

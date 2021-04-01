@@ -1,0 +1,17 @@
+#flag_image {
+	max-width: 300px;
+	object-fit: cover;
+	/* border: 1px solid black; */
+	/* border-radius: 2%; */
+}
+
+#participant_image {
+	max-width: 100%;
+	object-fit: cover;
+	border: 1px solid black;
+	border-radius: 2%;
+}
+
+.text_area {
+	height: 150px;
+}

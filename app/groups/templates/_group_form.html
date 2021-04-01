@@ -1,0 +1,36 @@
+<div class="row">
+
+  <!-- CSRF Token -->
+  {{ form.hidden_tag() }}
+  
+  <!-- group name -->
+  <div class="form-floating col-12 my-2">
+
+    {{form.name(class_="form-control", placeholder="Group name*")}}
+    {{form.name.label}}
+
+  </div>
+
+  <!-- description -->
+  <div class="form-floating col-12 my-2">
+
+    {{form.description(class_="form-control", placeholder="Description", style="height: 100px")}}
+    {{form.description.label}}
+
+  </div>
+
+  <!-- can members add new members -->
+  <div class="col-auto form-check form-switch ms-3 mb-3">
+
+    <label class="form-check-label" for="{{form.members_add_users.label.field_id}}">Can regular members add new members to the group?</label>
+    {{form.members_add_users(class_='form-check-input')}}
+
+    {% for err in form.members_add_users.errors %}
+    <span class="badge rounded-pill bg-danger me-1 text-wrap">{{err}}</span>
+    {% endfor %}
+
+  </div>
+
+</div>
+
+

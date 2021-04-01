@@ -1,0 +1,28 @@
+<div id="members-bar" class="row">
+  <div>
+
+    {% if member_type in group['can_invite_list'] %}
+    <div class="member-card">
+      <a href="/groups/{{group.id}}/invite">
+        <i class="icon-link profile-picture fad fa-user-plus"></i>
+      </a>
+
+    </div>
+    {% endif %}
+
+    {% for member in members %}
+    <div class="member-card">
+      
+      <a href="/users/{{member.username}}">
+        <img src="{{member.profile_image_url}}" class="profile-picture profile-picture-link" alt="{{member.full_name}}">
+      </a>
+
+      <p class="profile-name">
+        <a class="member-link" href="/users/{{member.username}}">{{member.first_name}} {{member.last_name}}</a>
+      </p>
+
+    </div>
+    {% endfor %}
+    
+    </div>
+</div>

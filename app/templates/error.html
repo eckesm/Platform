@@ -1,0 +1,18 @@
+{% extends 'base_simple-heading.html' %}
+
+<!-- title -->
+{% block title %}{{error['heading']}}{% endblock %}
+
+{% block content %}
+  <div class="container p-3 my-5">
+    
+    <div class="align-self-center">
+      <p class="display-3">{{error['heading']}}</p>
+      <hr>
+      <p class="display-6 my-5">{{error['message']}}</p>
+    </div>
+
+  </div>
+{% endblock %}
+
+{% block page_scripts %}{% endblock %}

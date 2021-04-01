@@ -1,0 +1,108 @@
+{% extends 'EUROVISION_API.html' %}
+
+<!-- title -->
+{% block title %}Participants{% endblock %}
+
+<!-- heading -->
+{% block heading %}API Updates{% endblock %}
+
+
+<!-- page content -->
+{% block body %}
+
+<ul class="nav nav-tabs">
+  <li class="nav-item">
+    <a class="nav-link" href="/eurovision/manage/countries">Countries</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link active" aria-current="page" href=/eurovision/manage/participants>Participants</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="/eurovision/manage/entries">Entries</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="/eurovision/manage/events">Events</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="/eurovision/manage/performances">Performances</a>
+  </li>
+</ul>
+
+<div class="container d-flex justify-content-center justify-content-lg-start my-5 border p-3">
+
+  <div class="row col-12">
+    <p class="fs-3">Participants</p>
+    
+    <div class="col-md-6">
+      <!-- participant form -->
+      <form id="participant_form" action="" method="post">
+
+        <!-- CSRF Token -->
+        {{ form.hidden_tag() }}
+    
+        <!-- participant select -->
+        <div class="input-group my-1">
+          <span class="input-group-text">Participant</span>
+          <select id='participant_select' class="form-select bg-info text-dark">
+            <option value="add_new_participant" selected>-- Add new participant --</option>
+            {% for participant in participants %}
+              {% if selected_participant and participant[0] == selected_participant['id'] %}
+              <option value="{{ participant[0] }}" selected>{{ participant[1] }}</option>
+              {% else %}
+              <option value="{{ participant[0] }}">{{ participant[1] }}</option>
+              {% endif %}
+            {% endfor %}
+          </select>
+        </div>
+      
+        <!-- name -->
+        <div class="input-group my-1">
+          <span class="input-group-text">Name</span>
+          {{ form.name(class_="form-control") }}
+        </div>
+        
+        <!-- image url -->
+        <div class="input-group my-1">
+          <span class="input-group-text">Image url</span>
+          {{ form.image_url(class_="form-control") }}
+        </div>
+        
+        <!-- description -->
+        <div class="input-group my-1">
+          <span class="input-group-text">Description</span>
+          {{ form.description(class_="form-control text_area") }}
+        </div>
+      
+      </form>
+    </div>
+    
+    <!-- participant image -->
+    {% if selected_participant and selected_participant['image_url'] %}
+    <div class="col-md-6 mt-3 mt-md-0">
+      <img id="participant_image" src="{{ selected_participant['image_url'] }}" alt="{{ selected_participant['participant'] }}">
+    </div>
+    {% endif %}
+    
+    <!-- buttons -->
+    <div class="mt-3 mt-md-1">
+      <button id="add_participant_btn" class="btn btn-primary"
+      {% if selected_participant %} disabled {% endif %}
+      >Add</button>
+    
+      <button id="update_participant_btn" class="btn btn-primary"
+      {% if not selected_participant %} disabled {% endif %}
+      >Update</button>
+    
+      <button id="delete_participant_btn" class="btn btn-danger"
+      {% if not selected_participant %} disabled {% endif %}
+      >Delete</button>
+    </div>
+
+  </div>
+
+</div>
+{% endblock %}
+
+{% block page_scripts %}
+<script src="{{ url_for('eurovision_bp.static', filename='participant_form.js') }}"></script>
+{% endblock %}

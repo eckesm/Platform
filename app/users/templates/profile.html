@@ -1,0 +1,53 @@
+{% extends 'USER.html' %}
+
+<!-- title -->
+{% block title %}{{user.full_name}}{% endblock %}
+
+<!-- hero -->
+{% block header_pic_url %}{{g.user.header_image_url}}{% endblock %}
+
+<!-- profile picture -->
+{% block profile_pic %}
+
+  {% if user.id == g.user.id %}
+  
+  <div id="profile-picture-container">
+    <img id="profile-picture" src="{{user.profile_image_url}}" alt="{{user.full_name}}">
+    <div id="profile-overlay">
+      <a href="/user/profile-picture">
+        <i id="profile-icon" class="fad fa-camera-retro"></i>
+      </a>
+    </div>
+  </div>
+  
+  {% else %}
+  
+  <div id="profile-picture-container">
+    <img id="profile-picture" src="{{user.profile_image_url}}" alt="{user.full_name}}">
+  </div>
+  
+  {% endif %}
+{% endblock %}
+
+
+<!-- heading and greeting -->
+{% block heading %}{{user.full_name}}{% endblock %}
+{% block greeting %}{% endblock %}
+
+<!-- page content -->
+{% block body %}
+<div class="container d-flex justify-content-center justify-content-lg-start my-5">
+
+  <!-- profile details -->
+  <div class="row col-12 col-sm-10 col-md-8 col-lg-6 col-xl-5 border border-1 border-light rounded shadow-lg p-3">
+    <p class="h4 text-center">Profile</p>
+    <hr class="mb-1">
+    <ul class="list-group">
+      <li class="list-group-item"><b>Username:</b> @{{user.username}}</li>
+      <li class="list-group-item"><b>Email address:</b> {{user.email_address}}</li>
+      <li class="list-group-item"><b>Pronouns:</b> {{user.subject_pronoun}}/{{user.object_pronoun}}</li>
+    </ul>
+  </div>
+
+</div>
+{% endblock %}

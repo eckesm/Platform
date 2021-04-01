@@ -1,0 +1,39 @@
+#group-invite-user-form-contents {
+	width:300px;
+}
+
+#members-bar .member-card {
+	width: 110px;
+	margin-left: 3px;
+	margin-right: 3px;
+	padding: 0px;
+	text-align: center;
+	display: inline-block;
+}
+
+#members-bar .member-card .profile-picture {
+	object-fit: cover;
+	border-radius: 50%;
+	height: 100px;
+	width: 100px;
+	padding: 0px;
+	margin-top: 3px;
+}
+
+#members-bar .member-card .profile-name {
+	font-size: 18px;
+	width: 100%;
+	text-align: center;
+	padding: 0px;
+	margin: 0px;
+}
+
+#members-bar .member-card .member-status {
+	font-size: 15px;
+	width: 100%;
+	overflow-x: hidden;
+	text-align: center;
+	word-wrap: break-word;
+	padding: 0px;
+	margin: 0px;
+}

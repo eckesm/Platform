@@ -1,0 +1,32 @@
+{% extends 'GROUP.html' %}
+
+{% block description %}{% endblock %}
+
+<!-- page content -->
+
+{% block body_left %}
+
+{% endblock %}
+
+
+
+{% block body_right %}
+  <div id="messages-module" class="col-md-7 col-lg-8 my-3 my-md-0 p-1 align-content-start row border border-2 border-light rounded shadow-lg p-1">
+    
+    <div id="new-message">
+      <form class="col-12" action="/groups/{{group.id}}/posts" method="POST">
+        {% include '_new_post_form.html' %}  
+      </form>
+    </div>
+    
+    <!-- message thread -->
+    <div id="messages-scroll" class="my-1">
+      {% include '_messages.html' %}
+    </div>
+<!-- </div> -->
+{% endblock %}
+
+
+{% block page_scripts %}
+<script src="{{ url_for('groups_bp.static', filename='group_profile.js') }}"></script>
+{% endblock %}

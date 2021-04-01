@@ -1,0 +1,42 @@
+
+<div class="members_messages align-content-start row border border-2 border-light rounded shadow-lg p-1"></div>
+  <div class="d-flex justify-content-center align-items-center my-1">
+    <p class="col-11 h4 text-center m-0">Members</p>
+    
+    {% if member_type in group['can_invite_list'] %}
+    <a href="/groups/{{group.id}}/invite" class="icon-link">
+      <i class="fad fa-user-plus fa-sm"></i>
+    </a>
+    {% endif %}
+  
+  </div>
+
+  <div class="members_messages col-md-4 col-lg-3 my-3 my-md-0 p-1">    
+
+    <div class="members_outer my-1">
+      <div class="members_module">
+        {% for member in members %}
+      
+        <div class="card p-0 my-1">
+          
+          <div class="row g-0">
+            
+            <div class="col-3">
+              <img src="{{member.profile_url}}" class="w-100" alt="{{member.full_name}}">
+            </div>
+            
+            <div class="col-8">
+              <div class="card-body p-1">
+                <h5 class="card-title mb-0"><a class="member-link" href="/users/{{member.username}}">{{member.full_name}}</a></h5>
+                <p class="card-text">{{member.member_type}}</p>
+              </div>
+            </div>
+          
+          </div>
+        </div>
+      
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>

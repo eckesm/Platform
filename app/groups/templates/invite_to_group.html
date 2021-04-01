@@ -1,0 +1,55 @@
+{% extends 'base_simple-heading.html' %}
+
+
+{% block page_styles %}
+<link rel="stylesheet" href="{{ url_for('groups_bp.static', filename='invite_to_group.css') }}" type="text/css">
+{% endblock %}
+
+<!-- title -->
+{% block title %}Invite Members{% endblock %}
+
+<!-- heading and greeting -->
+{% block heading %}Invite Members{% endblock %}
+{% block greeting %}{% endblock %}
+
+<!-- page content -->
+{% block body %}
+<div class="container d-flex justify-content-center my-5">
+
+  <!-- new group form -->
+  <div class="row border border-1 border-light rounded shadow-lg p-3">
+    <form method="POST">
+      {% include '_invite_to_group_form.html' %}
+    </form>
+
+    <hr class="my-4">
+
+    <!-- members and invites -->
+    <div id="members-bar" class="row justify-content-around justify-content-md-start">
+        
+      {% for member in members %}
+        <div class="member-card">
+        
+          <a href="/users/{{member.username}}">
+            <img src="{{member.profile_image_url}}" class="profile-picture profile-picture-link" alt="{{member.full_name}}">
+          </a>
+      
+          <p class="profile-name">
+            <a class="member-link" href="/users/{{member.username}}">{{member.first_name}} {{member.last_name}}</a>
+          </p>
+          <p class="member-status">{{member.member_type}}</p>
+          
+        </div>
+        {% endfor %}
+      
+      </div>
+
+  </div>
+
+</div>
+    
+{% endblock %}
+
+{% block page_scripts %}
+  <script src="{{ url_for('groups_bp.static', filename='invite_to_group.js') }}"></script>
+{% endblock %}

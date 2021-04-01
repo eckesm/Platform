@@ -1,0 +1,35 @@
+{% extends 'base_simple-heading.html' %}
+
+<!-- title -->
+{% block title %}New Group{% endblock %}
+
+<!-- heading and greeting -->
+{% block heading %}New Group{% endblock %}
+{% block greeting %}{{greeting}}{% endblock %}
+
+<!-- page content -->
+{% block body %}
+<div class="container d-flex justify-content-center my-5">
+
+  <!-- new group form -->
+  <div class="row border border-1 border-light rounded shadow-lg p-3">
+    <form method="POST">
+      
+      {% include '_group_form.html' %}
+
+      <!-- form buttons -->
+      <div class="d-flex justify-content-center">
+        <div>
+          <button type="submit" class="btn btn-primary">Submit</button>
+          <a href="/home" class="btn btn-outline-secondary" role="button">Cancel</a>
+        </div>  
+      </div>
+
+    </form>
+  </div>
+
+</div>
+    
+{% endblock %}
+
+{% block page_scripts %}{% endblock %}

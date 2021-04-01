@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block page_styles %}
+<link rel="stylesheet" href="{{ url_for('users_bp.static', filename='users.css') }}" type="text/css">
+{% endblock %}
+
+{% block title %}{% endblock %}
+
+{% block content %}
+<div class="container-fluid m-0 p-0">
+  
+  <!-- profile hero -->
+  <div id="profile-hero" style="background-image: url('{% block header_pic_url %}{% endblock %}');">  
+  </div>
+  
+  <!-- profile picture and greeting -->
+  <div id="profile-heading">
+    
+    {% block profile_pic %}{% endblock %}
+    
+    <div id="profile-greeting">
+      <p class="display-5">{% block heading %}{% endblock %}</p>          
+      <p class="lead"><i>{% block greeting %}{% endblock %}</i></p>
+    </div>
+  </div>
+  
+  <!-- page content -->
+  {% block body %}{% endblock %}
+  
+</div>
+{% endblock %}
+
+{% block page_scripts %}{% endblock %}

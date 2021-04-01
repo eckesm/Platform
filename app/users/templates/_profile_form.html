@@ -1,0 +1,39 @@
+<!-- CSRF Token -->
+{{ form.hidden_tag() }}
+
+
+<!-- preferred pronouns -->
+<div class="mb-4">
+  
+  <p class="h4 text-center">{{form.pronouns.label}}</p>
+  <hr class="mt-1"> 
+  
+  <div class="my-2">
+    {% for subfield in form.pronouns %}
+    <div class="form-check form-check-inline">
+      {{subfield(class_="form-check-input")}}
+      <label for="{{subfield.label.field_id}}">{{subfield.label.text}}</label>
+      <!-- {{subfield.label}} -->
+    </div>
+    {% endfor %}
+  </div>
+  
+  <div class="input-group col-6 my-2">
+    <span class="input-group-text">Subject & Object</span>
+    {{form.subject_pronoun(class_='form-control', placeholder='he/she/they/ze')}}
+    {{form.object_pronoun(class_='form-control', placeholder='him/her/them/zir')}}
+  </div>
+</div>
+
+<!-- header image url -->
+<div class="form-floating my-2">
+      
+  {{form.header_image_url(class_='form-control', placeholder='Header image URL')}}
+  <label for="{{form.header_image_url.label.field_id}}" class="">{{form.header_image_url.label.text}}</label>
+
+  {% for err in form.header_image_url.errors %}
+  <span class="badge rounded-pill bg-danger me-1 text-wrap">{{err}}</span>
+  {% endfor %}
+  
+</div>
+

@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block page_styles %}
+<link rel="stylesheet" href="{{ url_for('eurovision_bp.static', filename='eurovision.css') }}" type="text/css">
+{% endblock %}
+
+{% block title %}{% endblock %}
+
+{% block content %}
+<!-- whole container   -->
+<div class="container-fluid my-3">
+
+  <!-- heading and greeting -->
+  <div class="container-fluid d-flex justify-content-center">  
+    <div>
+      <p class="display-5 text-center mb-1">{% block heading %}{% endblock %}</p>
+    </div>
+  </div>
+  <hr>
+  
+  <!-- page content -->
+  {% block body %}{% endblock %}
+
+</div>
+
+{% endblock %}
+
+{% block page_scripts %}{% endblock %}

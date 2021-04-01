@@ -1,0 +1,30 @@
+<!-- invitation -->
+<div class="row justify-content-center">    
+  
+  <!-- CSRF Token -->
+  {{ form.hidden_tag() }}
+  
+  <div id="group-invite-user-form-contents">
+    <div class="input-group mt-2">
+      
+      {{form.username(class_="form-control", placeholder="Invite username", spellcheck="false", autocomplete="off", autocorrect="off", autocapitalize="off")}}
+      <button class="btn btn-outline-primary" type="submit" id="invite_btn">Invite</button>        
+      
+    </div>
+
+    {% for err in form.username.errors %}
+    <span class="badge rounded-pill bg-danger me-1 text-wrap">{{err}}</span>
+    {% endfor %}
+
+    <!-- form buttons -->
+    <div class="d-flex justify-content-center mt-2">
+      <div>
+        <a href="/groups/{{group.id}}" class="btn btn-outline-secondary" role="button">Return to Group</a>
+      </div>  
+    </div>
+  
+  </div>
+</div>
+
+
+

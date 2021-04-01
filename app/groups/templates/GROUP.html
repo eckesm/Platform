@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block page_styles %}
+<link rel="stylesheet" href="{{ url_for('groups_bp.static', filename='groups.css') }}" type="text/css">
+{% endblock %}
+
+{% block title %}{{group.name}}{% endblock %}
+
+{% block content %}
+<!-- whole container   -->
+  <div class="container-fluid my-3">
+
+    <!-- heading and greeting -->
+    <div class="row col-12 d-flex">
+      
+      <div class="my-auto col-12">
+      
+        <p class="display-5 text-start mb-1 px-3">{{group.name}}</p>
+        
+        {% if group.owner_id == g.user.id %}
+        <div class="d-flex px-3">
+          <p class="m-0 fst-italic fs-6">You are the owner of this group and can make edits.</p>
+          <a href="/groups/{{group.id}}/edit" class="icon-link ms-3"><i class="fad fa-pencil fa-sm"></i></a>
+        </div>
+        {% endif %}
+        
+        {% if group.description %} 
+        <!-- <div class="my-auto col-auto"> -->
+        <div class="px-3 d-flex">
+          <p class="lead text-start m-0 p-0 fs-6 text-wrap"><b>Group description:</b></p>
+          <p class="lead text-start m-0 ps-2 fs-6">{{group.description}}</p>
+        </div>
+        {% endif %}
+
+      </div>
+    </div>
+    
+    <hr class="my-3">
+    {% include '_members_bar.html' %}
+    <hr class="mt-0 mb-3">
+    
+    <div class="row justify-content-around vh-100">
+      
+      <!-- left page content -->
+      {% block body_left %}{% endblock %}
+
+      <!-- right page content -->
+      {% block body_right %}{% endblock %}
+      
+    </div>
+
+  </div>
+
+
+{% endblock %}
+
+{% block page_scripts %}{% endblock %}

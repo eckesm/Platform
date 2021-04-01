@@ -1,0 +1,584 @@
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 13.2
+-- Dumped by pg_dump version 13.2
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+
+SET default_tablespace = '';
+
+SET default_table_access_method = heap;
+
+--
+-- Name: aws_file_storage; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.aws_file_storage (
+    id text NOT NULL,
+    owner_id integer,
+    url text NOT NULL,
+    file_type character varying(25) NOT NULL,
+    category character varying(25) NOT NULL,
+    created timestamp without time zone NOT NULL,
+    status character varying(25) NOT NULL
+);
+
+
+ALTER TABLE public.aws_file_storage OWNER TO postgres;
+
+--
+-- Name: comment_types; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.comment_types (
+    id character varying(50) NOT NULL,
+    description text NOT NULL,
+    icon text,
+    created timestamp without time zone NOT NULL,
+    status character varying(25) NOT NULL
+);
+
+
+ALTER TABLE public.comment_types OWNER TO postgres;
+
+--
+-- Name: comments; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.comments (
+    id integer NOT NULL,
+    owner_id integer,
+    post_id integer,
+    type_id character varying(50),
+    content text,
+    created timestamp without time zone NOT NULL,
+    updated timestamp without time zone NOT NULL,
+    status character varying(25) NOT NULL
+);
+
+
+ALTER TABLE public.comments OWNER TO postgres;
+
+--
+-- Name: comments_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.comments_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.comments_id_seq OWNER TO postgres;
+
+--
+-- Name: comments_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.comments_id_seq OWNED BY public.comments.id;
+
+
+--
+-- Name: groups; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.groups (
+    id integer NOT NULL,
+    owner_id integer,
+    name character varying(100) NOT NULL,
+    description text,
+    members_add_users boolean NOT NULL,
+    created timestamp without time zone NOT NULL,
+    updated timestamp without time zone NOT NULL,
+    status character varying(25) NOT NULL
+);
+
+
+ALTER TABLE public.groups OWNER TO postgres;
+
+--
+-- Name: groups_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.groups_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.groups_id_seq OWNER TO postgres;
+
+--
+-- Name: groups_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.groups_id_seq OWNED BY public.groups.id;
+
+
+--
+-- Name: memberships; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.memberships (
+    id integer NOT NULL,
+    member_id integer NOT NULL,
+    group_id integer NOT NULL,
+    member_type text NOT NULL,
+    invited timestamp without time zone NOT NULL,
+    invited_by_id integer NOT NULL,
+    joined timestamp without time zone,
+    created timestamp without time zone NOT NULL,
+    updated timestamp without time zone NOT NULL,
+    status boolean NOT NULL
+);
+
+
+ALTER TABLE public.memberships OWNER TO postgres;
+
+--
+-- Name: memberships_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.memberships_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.memberships_id_seq OWNER TO postgres;
+
+--
+-- Name: memberships_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.memberships_id_seq OWNED BY public.memberships.id;
+
+
+--
+-- Name: posts; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.posts (
+    id integer NOT NULL,
+    owner_id integer,
+    group_id integer,
+    content text NOT NULL,
+    created timestamp without time zone NOT NULL,
+    updated timestamp without time zone NOT NULL,
+    status character varying(25) NOT NULL
+);
+
+
+ALTER TABLE public.posts OWNER TO postgres;
+
+--
+-- Name: posts_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.posts_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.posts_id_seq OWNER TO postgres;
+
+--
+-- Name: posts_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.posts_id_seq OWNED BY public.posts.id;
+
+
+--
+-- Name: users; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.users (
+    id integer NOT NULL,
+    email_address character varying(254) NOT NULL,
+    email_confirm_token text,
+    is_email_confirmed boolean NOT NULL,
+    username character varying(25) NOT NULL,
+    password text NOT NULL,
+    password_reset_token text,
+    api_token text NOT NULL,
+    first_name character varying(25) NOT NULL,
+    last_name character varying(25) NOT NULL,
+    subject_pronoun character varying(15) NOT NULL,
+    object_pronoun character varying(15) NOT NULL,
+    profile_image_id text NOT NULL,
+    header_image_url text NOT NULL,
+    created timestamp without time zone NOT NULL,
+    updated timestamp without time zone NOT NULL,
+    role text NOT NULL,
+    status text NOT NULL
+);
+
+
+ALTER TABLE public.users OWNER TO postgres;
+
+--
+-- Name: users_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.users_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.users_id_seq OWNER TO postgres;
+
+--
+-- Name: users_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.users_id_seq OWNED BY public.users.id;
+
+
+--
+-- Name: comments id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.comments ALTER COLUMN id SET DEFAULT nextval('public.comments_id_seq'::regclass);
+
+
+--
+-- Name: groups id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.groups ALTER COLUMN id SET DEFAULT nextval('public.groups_id_seq'::regclass);
+
+
+--
+-- Name: memberships id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.memberships ALTER COLUMN id SET DEFAULT nextval('public.memberships_id_seq'::regclass);
+
+
+--
+-- Name: posts id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.posts ALTER COLUMN id SET DEFAULT nextval('public.posts_id_seq'::regclass);
+
+
+--
+-- Name: users id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.users ALTER COLUMN id SET DEFAULT nextval('public.users_id_seq'::regclass);
+
+
+--
+-- Data for Name: aws_file_storage; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.aws_file_storage (id, owner_id, url, file_type, category, created, status) FROM stdin;
+klb9kosj3x73zfatbhurp95tw	1	https://mre-platform.s3.us-east-2.amazonaws.com/klb9kosj3x73zfatbhurp95tw.jpg	image	profile-picture	2021-03-21 18:19:14.862599	active
+nxew011f4kcr7ngcbhjedrwdy	2	https://mre-platform.s3.us-east-2.amazonaws.com/nxew011f4kcr7ngcbhjedrwdy.jpg	image	profile-picture	2021-03-21 18:19:14.862599	active
+8j53bk7qqjpaui9gfbip692p0	4	https://mre-platform.s3.us-east-2.amazonaws.com/8j53bk7qqjpaui9gfbip692p0.jpg	image	profile-picture	2021-03-21 18:19:14.862599	active
+azwonxkk1w0v40y38bgfhqcih	3	http://mre-platform.s3.amazonaws.com/azwonxkk1w0v40y38bgfhqcih.jpg	image	profile-picture	2021-03-21 18:21:06.16521	active
+cvn71f8v63b5quuftp5858thp	4	http://mre-platform.s3.amazonaws.com/cvn71f8v63b5quuftp5858thp.jpg	image	profile-picture	2021-03-21 18:21:34.811805	active
+\.
+
+
+--
+-- Data for Name: comment_types; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.comment_types (id, description, icon, created, status) FROM stdin;
+\.
+
+
+--
+-- Data for Name: comments; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.comments (id, owner_id, post_id, type_id, content, created, updated, status) FROM stdin;
+\.
+
+
+--
+-- Data for Name: groups; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.groups (id, owner_id, name, description, members_add_users, created, updated, status) FROM stdin;
+1	1	Eckes Family	The Eckes family and their significant others.	f	2021-03-21 18:19:14.778522	2021-03-21 18:19:14.778522	active
+2	3	PBML	Pots by Matt & Laura	f	2021-03-21 18:19:14.778522	2021-03-21 18:19:14.778522	active
+3	2	Ahlgren/Latchaw Family	The Ahlgren/Latchaw family and their significant others.	f	2021-03-21 18:19:14.778522	2021-03-21 18:19:14.778522	active
+4	4	Alaska Bound!	Solely devoted to remembering our trip to Alaska.	f	2021-03-21 18:19:14.778522	2021-03-21 18:19:14.778522	active
+\.
+
+
+--
+-- Data for Name: memberships; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.memberships (id, member_id, group_id, member_type, invited, invited_by_id, joined, created, updated, status) FROM stdin;
+1	1	1	owner	2021-03-21 18:19:14.793878	1	2021-03-21 18:19:14.793878	2021-03-21 18:19:14.793878	2021-03-21 18:19:14.793878	t
+2	2	1	member	2021-03-21 18:19:14.793878	1	2021-03-21 18:19:14.793878	2021-03-21 18:19:14.793878	2021-03-21 18:19:14.793878	t
+3	3	1	member	2021-03-21 18:19:14.793878	1	2021-03-21 18:19:14.793878	2021-03-21 18:19:14.793878	2021-03-21 18:19:14.793878	t
+4	1	3	member	2021-03-21 18:19:14.793878	2	2021-03-21 18:19:14.793878	2021-03-21 18:19:14.793878	2021-03-21 18:19:14.793878	t
+5	2	3	owner	2021-03-21 18:19:14.793878	2	2021-03-21 18:19:14.793878	2021-03-21 18:19:14.793878	2021-03-21 18:19:14.793878	t
+6	3	2	owner	2021-03-21 18:19:14.793878	3	2021-03-21 18:19:14.793878	2021-03-21 18:19:14.793878	2021-03-21 18:19:14.793878	t
+7	1	2	member	2021-03-21 18:19:14.793878	3	2021-03-21 18:19:14.793878	2021-03-21 18:19:14.793878	2021-03-21 18:19:14.793878	t
+9	6	1	invited	2021-03-21 18:19:14.793878	1	2021-03-21 18:19:14.793878	2021-03-21 18:19:14.793878	2021-03-21 18:19:14.793878	t
+10	4	4	owner	2021-03-21 18:19:14.793878	4	2021-03-21 18:19:14.793878	2021-03-21 18:19:14.793878	2021-03-21 18:19:14.793878	t
+11	1	4	member	2021-03-21 18:19:14.793878	4	2021-03-21 18:19:14.793878	2021-03-21 18:19:14.793878	2021-03-21 18:19:14.793878	t
+12	2	4	member	2021-03-21 18:19:14.793878	4	2021-03-21 18:19:14.793878	2021-03-21 18:19:14.793878	2021-03-21 18:19:14.793878	t
+13	3	4	member	2021-03-21 18:19:14.793878	4	2021-03-21 18:19:14.793878	2021-03-21 18:19:14.793878	2021-03-21 18:19:14.793878	t
+14	5	4	member	2021-03-21 18:19:14.793878	4	2021-03-21 18:19:14.793878	2021-03-21 18:19:14.793878	2021-03-21 18:19:14.793878	t
+15	6	4	member	2021-03-21 18:19:14.793878	4	2021-03-21 18:19:14.793878	2021-03-21 18:19:14.793878	2021-03-21 18:19:14.793878	t
+16	7	4	member	2021-03-21 18:19:14.793878	4	2021-03-21 18:19:14.793878	2021-03-21 18:19:14.793878	2021-03-21 18:19:14.793878	t
+17	8	1	member	2021-03-21 18:19:14.793878	1	2021-03-21 18:19:14.793878	2021-03-21 18:19:14.793878	2021-03-21 18:19:14.793878	t
+18	8	4	member	2021-03-21 18:19:14.793878	4	2021-03-21 18:19:14.793878	2021-03-21 18:19:14.793878	2021-03-21 18:19:14.793878	t
+8	5	1	member	2021-03-21 18:19:14.793878	1	2021-03-21 18:20:24.830488	2021-03-21 18:19:14.793878	2021-03-21 18:20:24.830488	t
+19	9	4	invited	2021-03-21 18:22:56.845998	4	\N	2021-03-21 18:22:56.845998	2021-03-21 18:22:56.845998	t
+\.
+
+
+--
+-- Data for Name: posts; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.posts (id, owner_id, group_id, content, created, updated, status) FROM stdin;
+1	1	1	We should do something for Penny's 65th birthday!	2021-03-21 18:19:14.845022	2021-03-21 18:19:14.845022	active
+2	3	1	Agreed--she will be disappointed  if we don't.	2021-03-21 18:19:14.845022	2021-03-21 18:19:14.845022	active
+3	2	1	I'm in!	2021-03-21 18:19:14.845022	2021-03-21 18:19:14.845022	active
+4	1	1	Okay I will talk to John Eckes about it and see if we can figure something out.  Hopefully he has some ideas and is willing to do something fun at the house.	2021-03-21 18:19:14.845022	2021-03-21 18:19:14.845022	active
+5	2	1	I will pick up a cake on my way over.	2021-03-21 18:19:14.845022	2021-03-21 18:19:14.845022	active
+6	3	1	Oh wait! I think this is actually just her 64th birthday.  So maybe it's not such a big deal if it's not like a big party???	2021-03-21 18:19:14.845022	2021-03-21 18:19:14.845022	active
+7	1	1	Hmm... okay well then maybe we just go over for dinner and be really nice to her.  She normally appreciates when we are uncharacteristically nice for extended periods of time haha.	2021-03-21 18:19:14.845022	2021-03-21 18:19:14.845022	active
+8	2	1	Hahahahaha	2021-03-21 18:19:14.845022	2021-03-21 18:19:14.845022	active
+\.
+
+
+--
+-- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.users (id, email_address, email_confirm_token, is_email_confirmed, username, password, password_reset_token, api_token, first_name, last_name, subject_pronoun, object_pronoun, profile_image_id, header_image_url, created, updated, role, status) FROM stdin;
+1	meckes@gmail.com	\N	t	meckes	$2b$14$ignR7XzBdrwlY.0yUExVnuqSKx5iYMEMNM3o7CRDIb5y.1DOXdY7q	\N	ft2KLXAsytVEzhgua75-ew	Matthew	Eckes	he	him	klb9kosj3x73zfatbhurp95tw	https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fvastphotos.com%2Ffiles%2Fuploads%2Fphotos%2F10446%2Fcozy-winter-scene-l.jpg&f=1&nofb=1	2021-03-21 18:19:14.763599	2021-03-21 18:19:14.763599	administrator	active
+2	jlatchaw@gmail.com	\N	t	jlatchaw	$2b$14$PYJbEjsK.ubTXylyALrmd.rBEhG6ODiocjKFV39FiZYv1JxMxD8ai	\N	AmlmALExfdrpFerLLq1LWg	John	Latchaw	he	him	nxew011f4kcr7ngcbhjedrwdy	https://images.unsplash.com/photo-1479502806991-251c94be6b15?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxleHBsb3JlLWZlZWR8MTN8fHxlbnwwfHx8&auto=format&fit=crop&w=500&q=60	2021-03-21 18:19:14.763599	2021-03-21 18:19:14.763599	general	active
+5	asteinbach@gmail.com	\N	t	asteinbach	$2b$14$fqXpo9hc63GrQ0lOJjhw9uN9vhDHXiJomi4AVgJ8vlBIeOglAP9xC	\N	FSE5j7sccvO3ijNrmB9IBA	Avi	Steinbach	he	him	8j53bk7qqjpaui9gfbip692p0	https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fvastphotos.com%2Ffiles%2Fuploads%2Fphotos%2F10446%2Fcozy-winter-scene-l.jpg&f=1&nofb=1	2021-03-21 18:19:14.763599	2021-03-21 18:19:14.763599	general	active
+6	prosenberg@gmail.com	\N	t	prosenberg	$2b$14$sd4HFHqk/cgBKbgXn1LhIu9Gfr4TAzYOQOIwGtdrfxcnIElabVRlO	\N	vX2PRhrNMG0Pna7cYsMpVA	Penny	Rosenberg	she	her	default_user_profile_image	https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fvastphotos.com%2Ffiles%2Fuploads%2Fphotos%2F10446%2Fcozy-winter-scene-l.jpg&f=1&nofb=1	2021-03-21 18:19:14.763599	2021-03-21 18:19:14.763599	general	active
+7	syoung@gmail.com	\N	t	syoung	$2b$14$jConSG7gv8bc0/IBpa44we.Ro60bN6ifDpUqX4IfFyO6TTvi9AzKa	\N	M35KigUBddEtZ4aZayRLtA	Sue	Young	she	her	default_user_profile_image	https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fvastphotos.com%2Ffiles%2Fuploads%2Fphotos%2F10446%2Fcozy-winter-scene-l.jpg&f=1&nofb=1	2021-03-21 18:19:14.763599	2021-03-21 18:19:14.763599	general	active
+8	jeckes@gmail.com	\N	t	jeckes	$2b$14$sH4ufPl548YM.xflwXoxWutrkd9cEtPfGB613fF.RxUd7FrvAclZq	\N	tX1J9uM5azJFXfVrcYDZkw	John	Eckes	he	him	default_user_profile_image	https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fvastphotos.com%2Ffiles%2Fuploads%2Fphotos%2F10446%2Fcozy-winter-scene-l.jpg&f=1&nofb=1	2021-03-21 18:19:14.763599	2021-03-21 18:19:14.763599	general	active
+3	leckes@gmail.com	\N	t	leckes	$2b$14$VJw9jRDna9f6FK9ZtONw9u9aOyedmbnYUAR3jnvxJYyiL8T.mlBKC	\N	BL6C4SrofsjHCbqAy-pCGw	Laura	Eckes	she	her	azwonxkk1w0v40y38bgfhqcih	https://images.unsplash.com/photo-1542293787938-c9e299b880cc?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxleHBsb3JlLWZlZWR8N3x8fGVufDB8fHw%3D&auto=format&fit=crop&w=500&q=60	2021-03-21 18:19:14.763599	2021-03-21 18:19:14.763599	general	active
+4	gthomson@gmail.com	\N	t	gthomson	$2b$14$PLDgmzz7lepQUhWgqmSBTuRbWlaWCO8MGEXd6cm5YJYmlazmCnOLS	\N	xVQxnXjU1Qoh2FhQ06901A	Grace	Thomson	she	her	cvn71f8v63b5quuftp5858thp	https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fvastphotos.com%2Ffiles%2Fuploads%2Fphotos%2F10446%2Fcozy-winter-scene-l.jpg&f=1&nofb=1	2021-03-21 18:19:14.763599	2021-03-21 18:19:14.763599	general	active
+9	bthomson@testtesttest.com	RLp2pfSqSWnfbNZe1DuBAA	f	bthomson	$2b$14$jkRQfZgAAPZECLn3pd4t3.58k5hduEf0etdC93ZUlfcOjqBnGiTuq	\N	0MznSIi_LvGpcD0ssnA0bg	Brian	Thomson	they	them	default_user_profile_image	https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fvastphotos.com%2Ffiles%2Fuploads%2Fphotos%2F10446%2Fcozy-winter-scene-l.jpg&f=1&nofb=1	2021-03-21 18:22:30.984747	2021-03-21 18:22:32.378408	general	active
+\.
+
+
+--
+-- Name: comments_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.comments_id_seq', 1, false);
+
+
+--
+-- Name: groups_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.groups_id_seq', 4, true);
+
+
+--
+-- Name: memberships_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.memberships_id_seq', 19, true);
+
+
+--
+-- Name: posts_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.posts_id_seq', 8, true);
+
+
+--
+-- Name: users_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.users_id_seq', 9, true);
+
+
+--
+-- Name: aws_file_storage aws_file_storage_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.aws_file_storage
+    ADD CONSTRAINT aws_file_storage_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: comment_types comment_types_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.comment_types
+    ADD CONSTRAINT comment_types_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: comments comments_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.comments
+    ADD CONSTRAINT comments_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: groups groups_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.groups
+    ADD CONSTRAINT groups_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: memberships memberships_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.memberships
+    ADD CONSTRAINT memberships_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: posts posts_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.posts
+    ADD CONSTRAINT posts_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: users users_email_address_key; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.users
+    ADD CONSTRAINT users_email_address_key UNIQUE (email_address);
+
+
+--
+-- Name: users users_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.users
+    ADD CONSTRAINT users_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: users users_username_key; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.users
+    ADD CONSTRAINT users_username_key UNIQUE (username);
+
+
+--
+-- Name: aws_file_storage aws_file_storage_owner_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.aws_file_storage
+    ADD CONSTRAINT aws_file_storage_owner_id_fkey FOREIGN KEY (owner_id) REFERENCES public.users(id);
+
+
+--
+-- Name: comments comments_owner_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.comments
+    ADD CONSTRAINT comments_owner_id_fkey FOREIGN KEY (owner_id) REFERENCES public.users(id);
+
+
+--
+-- Name: comments comments_post_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.comments
+    ADD CONSTRAINT comments_post_id_fkey FOREIGN KEY (post_id) REFERENCES public.posts(id);
+
+
+--
+-- Name: comments comments_type_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.comments
+    ADD CONSTRAINT comments_type_id_fkey FOREIGN KEY (type_id) REFERENCES public.comment_types(id);
+
+
+--
+-- Name: groups groups_owner_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.groups
+    ADD CONSTRAINT groups_owner_id_fkey FOREIGN KEY (owner_id) REFERENCES public.users(id);
+
+
+--
+-- Name: memberships memberships_group_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.memberships
+    ADD CONSTRAINT memberships_group_id_fkey FOREIGN KEY (group_id) REFERENCES public.groups(id);
+
+
+--
+-- Name: memberships memberships_member_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.memberships
+    ADD CONSTRAINT memberships_member_id_fkey FOREIGN KEY (member_id) REFERENCES public.users(id);
+
+
+--
+-- Name: posts posts_group_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.posts
+    ADD CONSTRAINT posts_group_id_fkey FOREIGN KEY (group_id) REFERENCES public.groups(id);
+
+
+--
+-- Name: posts posts_owner_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.posts
+    ADD CONSTRAINT posts_owner_id_fkey FOREIGN KEY (owner_id) REFERENCES public.users(id);
+
+
+--
+-- PostgreSQL database dump complete
+--
+

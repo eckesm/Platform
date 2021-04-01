@@ -1,0 +1,33 @@
+{% extends 'USER.html' %}
+
+<!-- title -->
+{% block title %}Home{% endblock %}
+
+<!-- hero -->
+{% block header_pic_url %}{{g.user.header_image_url}}{% endblock %}
+
+<!-- profile picture -->
+{% block profile_pic %}
+<div id="profile-picture-container">
+  <img id="profile-picture" src="{{g.user.profile_image_url}}" alt="{{g.user.full_name}}">
+  <div id="profile-overlay">
+    <a href="/user/profile-picture">
+      <i id="profile-icon" class="fad fa-camera-retro"></i>
+    </a>
+  </div>
+</div>
+{% endblock %}
+
+<!-- heading and greeting -->
+{% block heading %}Home{% endblock %}
+{% block greeting %}{{session['greeting']}}{% endblock %}
+
+<!-- page content -->
+{% block body %}
+<div class="container d-flex justify-content-center justify-content-lg-start my-5">
+
+
+</div>
+{% endblock %}
+
+{% block page_scripts %}{% endblock %}

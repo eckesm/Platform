@@ -1,0 +1,39 @@
+{% extends 'base_simple-heading.html' %}
+
+<!-- title -->
+{% block title %}Edit Profile{% endblock %}
+
+<!-- heading and greeting -->
+{% block heading %}Edit Profile{% endblock %}
+{% block greeting %}{% endblock %}
+
+<!-- page content -->
+{% block body %}
+
+<div class="container d-flex justify-content-center my-5">
+  
+  <!-- edit profile form -->
+  <div class="row border border-1 border-light rounded shadow-lg p-3">
+    <form method="POST" action="/user/edit">
+
+      {% include '_profile_form.html' %}
+
+      <!-- form buttons -->
+      <div class="d-flex justify-content-center mt-3">
+        <div>
+          <button type="submit" class="btn btn-primary">Submit</button>
+          <a href="/home" class="btn btn-outline-secondary" role="button">Return Home</a>
+        </div>
+      </div>
+      
+    </form>
+
+  </div>
+</div>
+    
+{% endblock %}
+
+
+{% block page_scripts %}
+<script src="{{ url_for('users_bp.static', filename='preferred_pronouns.js') }}"></script>
+{% endblock %}

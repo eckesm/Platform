@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block page_styles %}{% endblock %}
+{% block title %}{% endblock %}
+
+
+{% block content %}
+<!-- whole container   -->
+  <div class="container col-12 col-md-11 col-lg-10 col-xl-9 my-3">
+    
+    <!-- heading and greeting -->
+    <div class="container d-flex justify-content-center">  
+      <div>
+        <p class="display-5 text-center mb-1">{% block heading %}{% endblock %}</p>
+        {% if session['greeting'] %}    
+        <p class="lead text-center m-0"><i>{% block greeting %}{% endblock %}</i></p>
+        {% endif %}
+      </div>
+    </div>
+    <hr>
+
+    <!-- page content -->
+    {% block body %}{% endblock %}
+    
+  </div>
+
+
+{% endblock %}
+
+{% block page_scripts %}{% endblock %}

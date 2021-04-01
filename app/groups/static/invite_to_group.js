@@ -1,0 +1,1 @@
+$('#username').val('').focus()

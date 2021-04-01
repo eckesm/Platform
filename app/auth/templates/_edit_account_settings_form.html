@@ -1,0 +1,83 @@
+<!-- new user form -->
+<div class="row align-items-top">
+  
+  <!-- CSRF Token -->
+  {{ form.hidden_tag() }}
+  
+  <div class="row">
+
+    <!-- first name -->
+    <div class="form-floating col-md-6 mt-2">
+    
+      {{form.first_name(class_='form-control', placeholder='First name')}}
+      {{form.first_name.label}}
+
+      {% for err in form.first_name.errors %}
+      <span class="badge rounded-pill bg-danger me-1 text-wrap">{{err}}</span>
+      {% endfor %}
+
+    </div>
+    
+    <!-- last name -->
+    <div class="form-floating col-md-6 mt-2">
+
+      {{form.last_name(class_='form-control', placeholder='Last name')}}
+      {{form.last_name.label}}
+
+      {% for err in form.last_name.errors %}
+      <span class="badge rounded-pill bg-danger me-1 text-wrap">{{err}}</span>
+      {% endfor %}
+
+    </div>
+  </div>
+
+  <div class="row">
+
+    <!-- email address -->
+    <div class="form-floating col-md-6 col-lg-5 col-xl-4 my-2">
+
+      <input type="hidden" id="current_email" value="{{current_email}}">
+      
+      {{form.email_address(class_='form-control', placeholder='Email address')}}
+      <label for="{{form.email_address.label.field_id}}" class="">{{form.email_address.label.text}}
+        <span id="email_address_available" class="badge"></span>
+      </label>
+      <div class="form-text"></div>
+  
+      {% for err in form.email_address.errors %}
+      <span class="badge rounded-pill bg-danger me-1 text-wrap">{{err}}</span>
+      {% endfor %}
+      
+    </div>
+    
+    <!-- username -->
+    <div class="form-floating col-md-6 col-lg-5 col-xl-4 my-2">
+      
+      <input type="hidden" id="current_username" value="{{current_username}}">
+      
+      {{form.username(class_='form-control', placeholder='Username')}}
+      <label for="{{form.username.label.field_id}}" class="">{{form.username.label.text}}
+        <span id="username_available" class="badge"></span>
+      </label>
+      <div class="form-text">Between 6 and 25 characters.</div>
+  
+      {% for err in form.username.errors %}
+      <span class="badge rounded-pill bg-danger me-1 text-wrap">{{err}}</span>
+      {% endfor %}
+  
+    </div>
+
+    <!-- confirm password -->
+    <div class="form-floating col-md-6 col-lg-5 col-xl-4 my-2">
+       
+      {{form.password(class_='form-control', placeholder='Password')}}
+      <label for="{{form.password.label.field_id}}" class="">{{form.password.label.text}}</label>
+      <div class="form-text">Enter current password to make changes.</div>
+  
+      {% for err in form.password.errors %}
+      <span class="badge rounded-pill bg-danger me-1 text-wrap">{{err}}</span>
+      {% endfor %}
+  
+    </div>
+  </div>
+      

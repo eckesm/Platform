@@ -1,0 +1,55 @@
+.messages {
+	margin: 10px;
+}
+.alert {
+	margin: 0px;
+}
+
+.profile_badge_navbar {
+	object-fit: cover;
+	border-radius: 50%;
+	/* border: 1px solid black; */
+}
+
+.profile-picture-link:hover {
+	transform: rotate(5deg);
+	transition: 300ms ease;
+}
+
+.member-link {
+	text-decoration: none;
+	color: black;
+}
+
+.member-link:hover {
+	text-decoration: underline;
+	color: rgba(0, 0, 0, 0.75);
+}
+
+.group-link {
+	text-decoration: none;
+	color: black;
+}
+
+.group-link:hover {
+	text-decoration: underline;
+	color: rgba(0, 0, 0, 0.75);
+}
+
+.icon-link {
+	color: grey;
+}
+
+.icon-link:hover {
+	color: blue;
+	transform: rotate(5deg);
+	transition: 300ms ease;
+}
+
+.accept:hover {
+	color: blue;
+}
+
+.reject:hover {
+	color: red;
+}

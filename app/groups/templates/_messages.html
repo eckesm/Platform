@@ -1,0 +1,69 @@
+<div id="messages-container">
+  
+  <!-- message thread -->
+  {% if posts == None or posts | length == 0 %}
+
+    <div class="text-center my-5 p-5">
+    {% if member_type == 'invited' %}
+      <p><i class="fad fa-user-astronaut fa-3x"></i></p>
+      <p><i>Only members can see posts.  Please accept your group invitation to start seeing posts.</i></p>
+      {% elif member_type == 'owner' %}
+      <p><i class="fad fa-ufo fa-3x"></i></p>
+      <p><i>Nobody has posted in this group yet.  Why not write the first post now...</i></p>
+      {% else %}
+      <p><i class="fad fa-cat-space fa-3x"></i></p>
+      <p><i>Nobody has posted in the group since you joined.  Why not message the group and let them know you're here...</i></p>
+      {% endif %}
+    </div>
+
+  {% else %}
+
+    <div class="text-center my-3">
+      <p class="my-0 text-muted"><i>...end of messages...</i></p>
+    </div>
+
+    {% for post in posts %}
+    
+    {% if post.owner_id == g.user.id %}
+    <div class="post d-flex justify-content-end my-2">
+    {% else %}
+    <div class="post d-flex justify-content-start my-2">
+    {% endif %}
+      
+      {% if post.owner_id != g.user.id %}
+      <img src="{{post.profile_image_url}}" class="profile-picture mt-auto me-1" width="34" height="34" alt="{{post.full_name}}">
+      {% endif %}  
+      
+      <div class="col-9">
+        <div class="d-flex align-items-center">
+          <p class="post-author text-muted m-0">{{post.full_name}}</p>
+          <p class="post-datetime text-muted align-bottom m-0 ms-auto"><i>{{post.friendly_datetime}}</i></p>
+        </div>
+        
+        {% if post.owner_id == g.user.id %}
+        <div class="card text-white bg-primary p-0 m-0"> 
+        {% else %}
+        <div class="card text-white bg-secondary p-0 m-0"> 
+        {% endif %}
+        
+          <div class="card-body p-1 m-0">
+            <p class="post-text card-text">{{post.post_content}}</p>
+          </div>
+
+        </div>
+      </div>
+      
+      {% if post.owner_id == g.user.id %}
+      <img src="{{g.user.profile_image_url}}" class="profile-picture mt-auto ms-1" width="34" height="34" alt="{{g.user.full_name}}">
+      {% endif %}
+    
+    </div>
+    {% endfor %}
+
+    <div class="text-center my-3">
+      <p class="my-0 text-muted"><i>...start of messages...</i></p>
+    </div>
+
+  {% endif %}
+
+</div>
