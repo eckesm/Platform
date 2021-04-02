@@ -192,9 +192,11 @@ def add_country():
 
         country_id = request.form['country_id']
         country_name = request.form['country_name']
-        headers = {'Content-Type': 'application/json'}
+        headers = {
+            'Content-Type': 'application/json',
+            'API-Key': API_KEY
+        }
         params = {
-            "api_key": API_KEY,
             "id": country_id,
             "country": country_name,
             "flag_image_url": request.form['flag_image_url']
@@ -231,9 +233,11 @@ def update_country(country_id):
     if form.validate_on_submit():
 
         country_name = request.form['country_name']
-        headers = {'Content-Type': 'application/json'}
+        headers = {
+            'Content-Type': 'application/json',
+            'API-Key': API_KEY
+        }
         params = {
-            "api_key": API_KEY,
             "country": country_name,
             "flag_image_url": request.form['flag_image_url']
         }
@@ -260,13 +264,13 @@ def update_country(country_id):
 @eurovision_mgmt_authorization_required
 def delete_country(country_id):
 
-    headers = {'Content-Type': 'application/json'}
-    params = {
-        "api_key": API_KEY
+    headers = {
+        'Content-Type': 'application/json',
+        'API-Key': API_KEY
     }
 
     response = requests.delete(
-        f"{API_BASE_URL}/countries/{country_id}", json=params, headers=headers)
+        f"{API_BASE_URL}/countries/{country_id}", headers=headers)
 
     status = response.json()['status']
     if status == 'success':
@@ -322,9 +326,11 @@ def add_participant():
     if form.validate_on_submit():
 
         participant_name = request.form['name']
-        headers = {'Content-Type': 'application/json'}
+        headers = {
+            'Content-Type': 'application/json',
+            'API-Key': API_KEY
+        }
         params = {
-            "api_key": API_KEY,
             "name": participant_name,
             "image_url": request.form['image_url'],
             "description": request.form['description']
@@ -362,9 +368,11 @@ def update_participant(participant_id):
     if form.validate_on_submit():
 
         participant_name = request.form['name']
-        headers = {'Content-Type': 'application/json'}
+        headers = {
+            'Content-Type': 'application/json',
+            'API-Key': API_KEY
+        }
         params = {
-            "api_key": API_KEY,
             "name": participant_name,
             "image_url": request.form['image_url'],
             "description": request.form['description']
@@ -392,13 +400,12 @@ def update_participant(participant_id):
 @eurovision_mgmt_authorization_required
 def delete_participant(participant_id):
 
-    headers = {'Content-Type': 'application/json'}
-    params = {
-        "api_key": API_KEY
+    headers = {
+        'Content-Type': 'application/json',
+        'API-Key': API_KEY
     }
-
     response = requests.delete(
-        f"{API_BASE_URL}/participants/{participant_id}", json=params, headers=headers)
+        f"{API_BASE_URL}/participants/{participant_id}", headers=headers)
 
     status = response.json()['status']
     if status == 'success':
@@ -480,9 +487,11 @@ def add_entry():
     if form.validate_on_submit():
 
         entry_name = request.form['title']
-        headers = {'Content-Type': 'application/json'}
+        headers = {
+            'Content-Type': 'application/json',
+            'API-Key': API_KEY
+        }
         params = {
-            "api_key": API_KEY,
             "participant_id": request.form['participant_id'],
             "country_id": request.form['country_id'],
             "title": entry_name,
@@ -534,9 +543,11 @@ def update_entry(entry_id):
     if form.validate_on_submit():
 
         entry_name = request.form['title']
-        headers = {'Content-Type': 'application/json'}
+        headers = {
+            'Content-Type': 'application/json',
+            'API-Key': API_KEY
+        }
         params = {
-            "api_key": API_KEY,
             "participant_id": request.form['participant_id'],
             "country_id": request.form['country_id'],
             "title": entry_name,
@@ -575,13 +586,13 @@ def update_entry(entry_id):
 @eurovision_mgmt_authorization_required
 def delete_entry(entry_id):
 
-    headers = {'Content-Type': 'application/json'}
-    params = {
-        "api_key": API_KEY
+    headers = {
+        'Content-Type': 'application/json',
+        'API-Key': API_KEY
     }
 
     response = requests.delete(
-        f"{API_BASE_URL}/entries/{entry_id}", json=params, headers=headers)
+        f"{API_BASE_URL}/entries/{entry_id}", headers=headers)
 
     status = response.json()['status']
     if status == 'success':
@@ -660,9 +671,11 @@ def add_event():
     if form.validate_on_submit():
 
         event_name = request.form['event_name']
-        headers = {'Content-Type': 'application/json'}
+        headers = {
+            'Content-Type': 'application/json',
+            'API-Key': API_KEY
+        }
         params = {
-            "api_key": API_KEY,
             "event": event_name,
             "type": request.form['type'],
             "year": request.form['year'],
@@ -718,9 +731,11 @@ def update_event(event_id):
         if not end_time:
             end_time = "12:00"
         end_time = request.form['end_time']
-        headers = {'Content-Type': 'application/json'}
+        headers = {
+            'Content-Type': 'application/json',
+            'API-Key': API_KEY
+        }
         params = {
-            "api_key": API_KEY,
             "event": event_name,
             "type": request.form['type'],
             "year": request.form['year'],
@@ -757,13 +772,13 @@ def update_event(event_id):
 @eurovision_mgmt_authorization_required
 def delete_event(event_id):
 
-    headers = {'Content-Type': 'application/json'}
-    params = {
-        "api_key": API_KEY
+    headers = {
+        'Content-Type': 'application/json',
+        'API-Key': API_KEY
     }
 
     response = requests.delete(
-        f"{API_BASE_URL}/events/{event_id}", json=params, headers=headers)
+        f"{API_BASE_URL}/events/{event_id}", headers=headers)
 
     status = response.json()['status']
     if status == 'success':
@@ -840,8 +855,6 @@ def add_performance():
     form.qualified.choices = [('true', 'Yes'), ('false', 'No')]
     if form.validate_on_submit():
 
-        # print(f"QUALIFIED: {qualified}", file=sys.stderr)
-
         points = request.form['points']
         if points == '':
             points = 0
@@ -854,9 +867,11 @@ def add_performance():
         if running_order == '':
             running_order = 0
 
-        headers = {'Content-Type': 'application/json'}
+        headers = {
+            'Content-Type': 'application/json',
+            'API-Key': API_KEY
+        }
         params = {
-            "api_key": API_KEY,
             "event_id": request.form['event_id'],
             "entry_id": request.form['entry_id'],
             "points": points,
@@ -913,9 +928,11 @@ def update_performance(performance_id):
         if running_order == '':
             running_order = 0
 
-        headers = {'Content-Type': 'application/json'}
+        headers = {
+            'Content-Type': 'application/json',
+            'API-Key': API_KEY
+        }
         params = {
-            "api_key": API_KEY,
             "event_id": request.form['event_id'],
             "entry_id": request.form['entry_id'],
             "points": points,
@@ -946,13 +963,13 @@ def update_performance(performance_id):
 @eurovision_mgmt_authorization_required
 def delete_performance(performance_id):
 
-    headers = {'Content-Type': 'application/json'}
-    params = {
-        "api_key": API_KEY
+    headers = {
+        'Content-Type': 'application/json',
+        'API-Key': API_KEY
     }
 
     response = requests.delete(
-        f"{API_BASE_URL}/performances/{performance_id}", json=params, headers=headers)
+        f"{API_BASE_URL}/performances/{performance_id}", headers=headers)
 
     status = response.json()['status']
     if status == 'success':
