@@ -210,7 +210,7 @@ def add_country():
             flash(f"{country_name} added successfully!", 'success')
         else:
             flash(f"There was an error adding {country_name}.", 'info')
-        return redirect(f"/eurovision/manage/countries/{country_id}")
+        return redirect(f"/eurovision/manage/countries/{country_id.upper()}")
 
     else:
         form_error_message(form.errors)
