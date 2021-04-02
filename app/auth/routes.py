@@ -7,7 +7,6 @@ from sqlalchemy.sql import func
 from ..models import db, User, Membership
 from .. import forms
 from .. import random_phrases
-from os import environ
 
 auth_bp = Blueprint(
     'auth_bp', __name__,
@@ -17,16 +16,9 @@ auth_bp = Blueprint(
 )
 
 mail = Mail(app)
-
-# if app.config["ENV"] == "production":
-#     app_url = secret.PRODUCTION_DOMAIN
-# else:
-#     app_url = 'http://127.0.0.1:5000'
-
-
 app_url = app.config["PRODUCTION_DOMAIN"]
-
 CURR_USER_ID = "curr_user"
+
 
 @app.before_request
 def add_user_to_g():
@@ -38,10 +30,12 @@ def add_user_to_g():
             session[CURR_USER_ID])
         g.group_invitations = Membership.get_invitations_by_user_sorted(
             session[CURR_USER_ID])
+        g.app_privileges = g.user.get_app_privileges()
+
     else:
         g.user = None
-        g.memberships=None
-        g.group_invitations=None
+        g.memberships = None
+        g.group_invitations = None
 
 #####################################################################
 # ----------------------- Access & Auxillary ---------------------- #
@@ -52,9 +46,10 @@ def do_login(user):
     session[CURR_USER_ID] = user.id
     session.pop('new-user-entries', None)
 
+
 def login_required(func):
     @wraps(func)
-    def decorated_function(*args,**kwargs):
+    def decorated_function(*args, **kwargs):
         if CURR_USER_ID not in session:
             log_out_procedures()
             flash("You must be logged-in to access this resource.", 'danger')
@@ -114,7 +109,7 @@ def login():
             flash('Login successful!', 'info')
             session['greeting'] = random_phrases.welcome_at_login.get_phrase(
                 f"{g.user.first_name}")
-            
+
             next_url = request.form.get("next")
             if next_url:
                 return redirect(next_url)
@@ -153,8 +148,8 @@ def log_out_procedures():
     session.pop('new-user-entries', None)
 
     g.user = None
-    g.memberships=None
-    g.group_invitations=None
+    g.memberships = None
+    g.group_invitations = None
 
 
 #####################################################################
@@ -186,7 +181,7 @@ def show_new_user_registration_form():
         send_confirm_email_link(email_address)
 
         do_login(new_user)
-        g.user=new_user
+        g.user = new_user
 
         session['greeting'] = random_phrases.welcome_first_login.get_phrase(
             f"{new_user.first_name}")
@@ -244,7 +239,7 @@ def update_account_settings_from_form():
 
         user.updated = func.now()
         db.session.commit()
-        g.user=user
+        g.user = user
 
         if current_email != new_email:
             send_confirm_email_link(new_email)
@@ -307,7 +302,7 @@ def send_password_reset_link(email_address):
 @auth_bp.route('/change-password/<token>', methods=['GET', 'POST'])
 def change_password(token):
     """Show change password form and submit form."""
-    
+
     if CURR_USER_ID in session:
         flash('You have been logged out', 'info')
     log_out_procedures()
@@ -325,7 +320,7 @@ def change_password(token):
             password = form.password.data
             user.change_password(password)
             user.password_reset_token = None
-            user.api_token=User.generate_api_token()
+            user.api_token = User.generate_api_token()
             user.updated = func.now()
             db.session.commit()
             flash('Your password has been updated.  Please log in again.', 'info')
@@ -399,7 +394,7 @@ def confirm_email_address(token):
                 user.email_confirm_token = None
                 user.updated = func.now()
                 db.session.commit()
-                g.user=user
+                g.user = user
                 flash('Your email address has been confirmed.', 'info')
 
                 session['greeting'] = "Feels great to have that email address confirmed, amiright???"

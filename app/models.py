@@ -6,6 +6,8 @@ import requests
 from secrets import token_urlsafe
 import string
 import random
+from os import environ
+import json
 
 
 db = SQLAlchemy()
@@ -37,6 +39,17 @@ class Scorecard(db.Model):
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name=db.Column(db.Text,nullable=True)
+
+# class AppPrivileges(db.Model):
+    
+#     __tablename__='app_privileges'
+
+#     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+#     user_id=db.Column(db.Integer, db.ForeignKey('users.id'))
+#     app_id=db.Column(db.Integer, db.ForeignKey('app.id'))
+#     created=db.Column(db.DateTime, nullable=False, default=func.now())
+#     updated=db.Column(db.DateTime, nullable=False, default=func.now())
+#     status=db.Column(db.String(25), nullable=False, default='active')
 
 
 class User(db.Model):
@@ -141,6 +154,12 @@ class User(db.Model):
         """Change password."""
         hashed=bcrypt.generate_password_hash(password, rounds=14)
         self.password=hashed.decode("utf8")
+    
+    def get_app_privileges(self):
+        if self.app_privileges:
+            return json.loads(self.app_privileges)
+        else:
+            return None
 
     @ classmethod
     def generate_api_token(cls):

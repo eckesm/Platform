@@ -5,6 +5,7 @@ from sqlalchemy.sql import func
 from wsgi import create_app
 app = create_app()
 
+
 def reseed_main_database():
 
     # Add and commit users.
@@ -18,7 +19,8 @@ def reseed_main_database():
                  object_pronoun='him',
                  profile_image_id='klb9kosj3x73zfatbhurp95tw',
                  role='administrator',
-                 api_token=User.generate_api_token())
+                 api_token=User.generate_api_token(),
+                 app_privileges='{"EUROVISION_MGMT":{"role":"admin","name":"Eurovision API","href":"/eurovision/manage"}}')
     user2 = User(first_name='John',
                  last_name='Latchaw',
                  email_address='jlatchaw@gmail.com',
@@ -29,7 +31,8 @@ def reseed_main_database():
                  object_pronoun='him',
                  profile_image_id='nxew011f4kcr7ngcbhjedrwdy',
                  header_image_url='https://images.unsplash.com/photo-1479502806991-251c94be6b15?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxleHBsb3JlLWZlZWR8MTN8fHxlbnwwfHx8&auto=format&fit=crop&w=500&q=60',
-                 api_token=User.generate_api_token())
+                 api_token=User.generate_api_token(),
+                 app_privileges='{"EUROVISION_MGMT":{"role":"admin","name":"Eurovision API","href":"/eurovision/manage"}}')
     user3 = User(first_name='Laura',
                  last_name='Eckes',
                  email_address='leckes@gmail.com',

@@ -34,13 +34,10 @@ eurovision_bp = Blueprint(
 def eurovision_mgmt_authorization_required(func):
     @wraps(func)
     def decorated_function(*args, **kwargs):
-        priveleges = g.user.app_privileges
-        if priveleges == None:
-            flash('Access denied.', 'danger')
-            return redirect('/home')
+        privileges = g.app_privileges
 
-        if json.loads(priveleges)['EUROVISION_MGMT'] != 'admin':
-            flash('Access denied.', 'danger')
+        if privileges == None or not privileges['EUROVISION_MGMT'] or not privileges['EUROVISION_MGMT']['role'] == 'admin':
+            flash('You do not have access to this resource.', 'danger')
             return redirect('/home')
 
         return func(*args, **kwargs)
