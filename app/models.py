@@ -194,8 +194,8 @@ class User(db.Model):
             return None
 
     @ classmethod
-    def get_by_id(cls, user_id):
-        return cls.query.filter_by(id=user_id).one_or_none()
+    def get_by_id(cls, id):
+        return cls.query.filter_by(id=id).one_or_none()
 
     @ classmethod
     def get_user_by_email(cls, email_address):

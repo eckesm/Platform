@@ -30,7 +30,10 @@ def add_user_to_g():
             session[CURR_USER_ID])
         g.group_invitations = Membership.get_invitations_by_user_sorted(
             session[CURR_USER_ID])
-        g.app_privileges = g.user.get_app_privileges()
+        try:
+            g.app_privileges = g.user.get_app_privileges()
+        except:
+            return
 
     else:
         g.user = None
