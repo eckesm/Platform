@@ -91,15 +91,14 @@ def check_for_username():
 # -------------------------------------------------------------------
 
 
-@ api_bp.route('/api/invitations/<int:invite_id>', methods=['PATCH'])
+@ api_bp.route('/api/invitations/<invite_id>', methods=['PATCH'])
 def accept_group_invitation_by_api(invite_id):
 
     invitation = Membership.get_invitation_by_invite(invite_id)
     if invitation == None:
         return jsonify(message=f"{invite_id} is not a valid invalid invitation.")
 
-
-    invited=User.get_user_by_id(invitation.member_id)
+    invited = User.get_by_id(invitation.member_id)
     api_token = request.json['api_token']
     if invited.api_token != api_token:
         return jsonify(message=f"You are not authorized to respond to invitation {invite_id}.")
@@ -111,13 +110,13 @@ def accept_group_invitation_by_api(invite_id):
         if reply == "accept":
             invitation.member_type = 'member'
             invitation.joined = func.now()
-            invitation.updated=func.now()
+            invitation.updated = func.now()
             db.session.commit()
             return jsonify({'status': "successful", 'message': f"{member_name} has been added to {group_name}."})
 
         elif reply == "reject":
             invitation.member_type = 'rejected'
-            invitation.updated=func.now()
+            invitation.updated = func.now()
             db.session.commit()
             return jsonify({'status': "successful", 'message': f"{member_name} declined the invitation to join {group_name}."})
 
@@ -128,42 +127,43 @@ def accept_group_invitation_by_api(invite_id):
 
 # NEED TO ENFORCE SOME SORT OF AUTHENTICATION
 
+
 @ api_bp.route('/api/invitations', methods=['POST'])
 def invite_member_to_group_by_api():
 
     api_token = request.json['api_token']
-    
+
     invited_by_id = request.json['invited_by_id']
-    invited_by = User.get_user_by_id(invited_by_id)
+    invited_by = User.get_by_id(invited_by_id)
     if invited_by == None:
         data = {
-            "status":"unsuccessful",
-            "message":f"The inviting user cannot be found for invited_by {invited_by}."
+            "status": "unsuccessful",
+            "message": f"The inviting user cannot be found for invited_by {invited_by}."
         }
         return jsonify(data)
-    
+
     if invited_by.api_token != api_token:
         data = {
-            "status":"unsuccessful",
-            "message":"You are not authenticated and cannot issue invitations."
+            "status": "unsuccessful",
+            "message": "You are not authenticated and cannot issue invitations."
         }
         return jsonify(data)
 
     member_id = request.json['member_id']
-    member = User.get_user_by_id(member_id)
+    member = User.get_by_id(member_id)
     if member == None:
         data = {
-            "status":"unsuccessful",
-            "message":f"The invited user cannot be found for member_id {member_id}."
+            "status": "unsuccessful",
+            "message": f"The invited user cannot be found for member_id {member_id}."
         }
         return jsonify(data)
-    
+
     group_id = request.json['group_id']
-    group = Group.get_group_by_id(group_id)
+    group = Group.get_by_id(group_id)
     if group == None:
         data = {
-            "status":"unsuccessful",
-            "message":f"The group cannot be found for group_id {group_id}."
+            "status": "unsuccessful",
+            "message": f"The group cannot be found for group_id {group_id}."
         }
         return jsonify(data)
 
@@ -183,10 +183,8 @@ def invite_member_to_group_by_api():
                             "invitation": existing_invitation.serialize_invitation()})
 
         else:
-            new_invitation = Membership(member_id=member_id, group_id=group_id,
-                                        member_type='invited', invited_by_id=invited_by_id)
-            db.session.add(new_invitation)
-            db.session.commit()
+            new_invitation = Membership.register(
+                member_id=member_id, group_id=group_id, member_type='invited', invited_by_id=invited_by_id, joined=None)
             return jsonify({"status": "successful",
                             "message": f"{new_invitation.member.full_name} has been invited to {new_invitation.group.name}.",
                             "invitation": new_invitation.serialize_invitation()})

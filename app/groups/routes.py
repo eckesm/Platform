@@ -41,24 +41,24 @@ def attempt_new_group():
             description = None
         members_add_users = form.members_add_users.data
 
-        new_group = Group(
+        new_group = Group.register(
             owner_id=session[CURR_USER_ID],
             name=name,
             description=description,
             members_add_users=members_add_users
         )
-        db.session.add(new_group)
-        db.session.commit()
+        # db.session.add(new_group)
+        # db.session.commit()
 
-        new_membership = Membership(
+        new_membership = Membership.register(
             member_id=session[CURR_USER_ID],
             group_id=new_group.id,
             member_type='owner',
             invited_by_id=session[CURR_USER_ID],
             joined=func.now()
         )
-        db.session.add(new_membership)
-        db.session.commit()
+        # db.session.add(new_membership)
+        # db.session.commit()
 
         g.memberships = Membership.get_memberships_info_by_user_sorted(
             session[CURR_USER_ID])
@@ -78,7 +78,7 @@ def attempt_new_group():
 #####################################################################
 
 
-@ groups_bp.route('/groups/<int:group_id>')
+@ groups_bp.route('/groups/<group_id>')
 @login_required
 def show_group_profile(group_id):
 
@@ -107,7 +107,7 @@ def show_group_profile(group_id):
 #####################################################################
 
 
-@ groups_bp.route('/groups/<int:group_id>/edit', methods=['GET', 'POST'])
+@ groups_bp.route('/groups/<group_id>/edit', methods=['GET', 'POST'])
 @login_required
 def edit_group(group_id):
     """Show edit group form; submit edits to database."""
@@ -117,7 +117,7 @@ def edit_group(group_id):
     if membership == None:
         return restricted_not_authorized()
 
-    group = Group.get_group_by_id(group_id)
+    group = Group.get_by_id(group_id)
     if group.owner_id != session[CURR_USER_ID]:
         return restricted_group_privileges(group_id)
 
@@ -136,7 +136,7 @@ def edit_group(group_id):
             return redirect(f'/groups/{group_id}')
 
         else:
-            safe_group = Group.get_group_by_id(group_id)
+            safe_group = Group.get_by_id(group_id)
             return render_template('edit_group.html', form=form, group=safe_group)
 
 
@@ -145,7 +145,7 @@ def edit_group(group_id):
 #####################################################################
 
 
-@ groups_bp.route('/groups/<int:group_id>/invite', methods=['GET', 'POST'])
+@ groups_bp.route('/groups/<group_id>/invite', methods=['GET', 'POST'])
 @login_required
 def invite_user_to_group(group_id):
     """Show invitation form; add membership invitation to database."""

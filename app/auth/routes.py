@@ -25,7 +25,7 @@ def add_user_to_g():
     """If logged in, add current user to Flask global."""
 
     if CURR_USER_ID in session:
-        g.user = User.get_user_by_id(session[CURR_USER_ID])
+        g.user = User.get_by_id(session[CURR_USER_ID])
         g.memberships = Membership.get_memberships_info_by_user_sorted(
             session[CURR_USER_ID])
         g.group_invitations = Membership.get_invitations_by_user_sorted(
@@ -36,6 +36,7 @@ def add_user_to_g():
         g.user = None
         g.memberships = None
         g.group_invitations = None
+        g.app_privileges = None
 
 #####################################################################
 # ----------------------- Access & Auxillary ---------------------- #
@@ -150,6 +151,7 @@ def log_out_procedures():
     g.user = None
     g.memberships = None
     g.group_invitations = None
+    g.app_privileges = None
 
 
 #####################################################################

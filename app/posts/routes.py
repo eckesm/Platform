@@ -19,7 +19,7 @@ posts_bp = Blueprint(
 #####################################################################
 
 
-@posts_bp.route('/groups/<int:group_id>/posts', methods=['POST'])
+@posts_bp.route('/groups/<group_id>/posts', methods=['POST'])
 @login_required
 def post_message_to_thread(group_id):
 
@@ -33,12 +33,8 @@ def post_message_to_thread(group_id):
 
         else:
             content = form.content.data
-            new_post = Post(
+            new_post = Post.register(
                 owner_id=session[CURR_USER_ID], group_id=group_id, content=content)
-            db.session.add(new_post)
-            db.session.commit()
-
-            # flash('Message posted!', 'info')
 
     else:
         flash('Messages must be at least 1 character.', 'warning')
