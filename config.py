@@ -1,7 +1,7 @@
 from os import environ
-from dotenv import load_dotenv
 
-load_dotenv()
+# from dotenv import load_dotenv
+# load_dotenv()
 
 class Config(object):
     FLASK_APP = environ.get('FLASK_APP')
