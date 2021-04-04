@@ -32,15 +32,13 @@ eurovision_bp = Blueprint(
 )
 
 
-
 def eurovision_mgmt_authorization_required(func):
     @wraps(func)
     def decorated_function(*args, **kwargs):
 
-        
         app_user = ApplicationUser.get_active_appuser_by_ids(
-            APPLICATION_ID, g.user.id)
-        
+            APPLICATION_ID, session[CURR_USER_ID])
+
         if app_user == None:
             flash('You do not have access to this resource.', 'danger')
             return redirect('/home')
