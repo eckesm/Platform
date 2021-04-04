@@ -15,8 +15,6 @@ import datetime
 from os import environ
 
 
-APPLICATION = Application.get_by_name('Eurovision API Manager')
-APPLICATION_ID = APPLICATION.id
 API_BASE_URL = environ.get('EUROVISION_API_BASE_URL')
 API_KEY = environ.get('EUROVISION_API_KEY')
 EVENT_TYPE_LIST = [('contest', 'Contest'), ('semi-final',
@@ -36,8 +34,14 @@ def eurovision_mgmt_authorization_required(func):
     @wraps(func)
     def decorated_function(*args, **kwargs):
 
-        app_user = ApplicationUser.get_active_appuser_by_ids(
-            APPLICATION_ID, session[CURR_USER_ID])
+        eurovision_application = Application.get_by_name('Eurovision API Manager')
+        eurovision_application_id = eurovision_application.id
+        
+        try:
+            app_user = ApplicationUser.get_active_appuser_by_ids(
+                eurovision_application_id, session[CURR_USER_ID])
+        except:
+            app_user = None
 
         if app_user == None:
             flash('You do not have access to this resource.', 'danger')
@@ -424,7 +428,7 @@ def delete_participant(participant_id):
 @eurovision_mgmt_authorization_required
 def show_entries():
 
-    entries = [(entry['id'], entry['title']) for entry in get_entries()]
+    entries = [(entry['id'], f"{entry['title']} | {entry['participant']} ({entry['country_id']})") for entry in get_entries()]
     participants = [(participant['id'], participant['name'])
                     for participant in get_participants()]
     countries = [(country['id'], country['country'])
@@ -442,7 +446,7 @@ def show_entries():
 @eurovision_mgmt_authorization_required
 def display_entry(entry_id):
 
-    entries = [(entry['id'], entry['title']) for entry in get_entries()]
+    entries = [(entry['id'], f"{entry['title']} | {entry['participant']} ({entry['country_id']})") for entry in get_entries()]
     participants = [(participant['id'], participant['name'])
                     for participant in get_participants()]
     countries = [(country['id'], country['country'])
@@ -475,7 +479,7 @@ def display_entry(entry_id):
 @eurovision_mgmt_authorization_required
 def add_entry():
 
-    entries = [(entry['id'], entry['title']) for entry in get_entries()]
+    entries = [(entry['id'], f"{entry['title']} | {entry['participant']} ({entry['country_id']})") for entry in get_entries()]
     participants = [(participant['id'], participant['name'])
                     for participant in get_participants()]
     countries = [(country['id'], country['country'])
@@ -531,7 +535,7 @@ def add_entry():
 @eurovision_mgmt_authorization_required
 def update_entry(entry_id):
 
-    entries = [(entry['id'], entry['title']) for entry in get_entries()]
+    entries = [(entry['id'], f"{entry['title']} | {entry['participant']} ({entry['country_id']})") for entry in get_entries()]
     participants = [(participant['id'], participant['name'])
                     for participant in get_participants()]
     countries = [(country['id'], country['country'])
@@ -797,7 +801,7 @@ def delete_event(event_id):
 @eurovision_mgmt_authorization_required
 def show_performances():
 
-    performances = [(performance['id'], f"{performance['entry']} | {performance['participant']} | {performance['country']}")
+    performances = [(performance['id'], f"{performance['entry']} | {performance['participant']} ({performance['country_id']}) @ {performance['event']}")
                     for performance in get_performances()]
     events = [(event['id'], event['event'])
               for event in get_events()]
@@ -816,7 +820,7 @@ def show_performances():
 @eurovision_mgmt_authorization_required
 def display_performance(performance_id):
 
-    performances = [(performance['id'], f"{performance['entry']} | {performance['participant']} | {performance['country']}")
+    performances = [(performance['id'], f"{performance['entry']} | {performance['participant']} ({performance['country_id']}) @ {performance['event']}")
                     for performance in get_performances()]
     events = [(event['id'], event['event'])
               for event in get_events()]
@@ -842,7 +846,7 @@ def display_performance(performance_id):
 @eurovision_mgmt_authorization_required
 def add_performance():
 
-    performances = [(performance['id'], f"{performance['entry']} | {performance['participant']} | {performance['country']}")
+    performances = [(performance['id'], f"{performance['entry']} | {performance['participant']} ({performance['country_id']}) @ {performance['event']}")
                     for performance in get_performances()]
     events = [(event['id'], event['event'])
               for event in get_events()]
@@ -885,10 +889,14 @@ def add_performance():
 
         status = response.json()['status']
         performance_id = response.json()['performance']['id']
+        entry = response.json()['performance']['entry']
+        participant = response.json()['performance']['participant']
+        country_id = response.json()['performance']['country_id']
+        event = response.json()['performance']['event']
         if status == 'success':
-            flash(f"{performance_id} added successfully!", 'success')
+            flash(f"{entry} | {participant} ({country_id}) @ {event} added successfully!", 'success')
         else:
-            flash(f"There was an error adding {performance_id}.", 'info')
+            flash(f"There was an error adding the performance.", 'info')
         return redirect(f"/eurovision/manage/performances/{performance_id}")
 
     else:
@@ -903,7 +911,7 @@ def add_performance():
 @eurovision_mgmt_authorization_required
 def update_performance(performance_id):
 
-    performances = [(performance['id'], f"{performance['entry']} | {performance['participant']} | {performance['country']}")
+    performances = [(performance['id'], f"{performance['entry']} | {performance['participant']} ({performance['country_id']}) @ {performance['event']}")
                     for performance in get_performances()]
     events = [(event['id'], event['event'])
               for event in get_events()]
@@ -945,10 +953,15 @@ def update_performance(performance_id):
             f"{API_BASE_URL}/performances/{performance_id}", json=params, headers=headers)
 
         status = response.json()['status']
+        performance_id = response.json()['performance']['id']
+        entry = response.json()['performance']['entry']
+        participant = response.json()['performance']['participant']
+        country_id = response.json()['performance']['country_id']
+        event = response.json()['performance']['event']
         if status == 'success':
-            flash(f"{performance_id} updated successfully!", 'success')
+            flash(f"{entry} | {participant} ({country_id}) @ {event} updated successfully!", 'success')
         else:
-            flash(f"There was an error updating {performance_id}.", 'info')
+            flash(f"There was an error updating performance {performance_id}.", 'info')
         return redirect(f"/eurovision/manage/performances/{performance_id}")
 
     else:

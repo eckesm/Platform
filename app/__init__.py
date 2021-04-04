@@ -7,8 +7,7 @@ from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
 from flask_mail import Mail, Message
 # from .assets import compile_static_assets
-from .models import db, User, Group, Membership, Post
-# from .secret import MAIL_USERNAME, MAIL_PASSWORD
+from .models import db, User, Group, Membership, Post, Application, ApplicationUser
 from .admin import AdminView
 
 # db = SQLAlchemy()

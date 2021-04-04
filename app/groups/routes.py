@@ -5,7 +5,6 @@ from ..auth.routes import restricted_group_privileges, restricted_not_authorized
 from ..models import db, Group, Membership, Post, User
 from .. import forms
 from .. import random_phrases
-# from .. import secret
 import requests
 
 
@@ -16,11 +15,6 @@ groups_bp = Blueprint(
     static_folder='static',
     static_url_path='/groups/static'
 )
-
-# if app.config["ENV"] == "production":
-#     app_url = secret.PRODUCTION_DOMAIN
-# else:
-#     app_url = 'http://127.0.0.1:5000'
 
 app_url = app.config["PRODUCTION_DOMAIN"]
 
