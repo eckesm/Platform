@@ -47,8 +47,6 @@ def attempt_new_group():
             description=description,
             members_add_users=members_add_users
         )
-        # db.session.add(new_group)
-        # db.session.commit()
 
         new_membership = Membership.register(
             member_id=session[CURR_USER_ID],
@@ -57,8 +55,6 @@ def attempt_new_group():
             invited_by_id=session[CURR_USER_ID],
             joined=func.now()
         )
-        # db.session.add(new_membership)
-        # db.session.commit()
 
         g.memberships = Membership.get_memberships_info_by_user_sorted(
             session[CURR_USER_ID])

@@ -3,7 +3,7 @@ from flask import current_app as app
 from sqlalchemy.sql import func
 from functools import wraps
 from ..auth.routes import restricted_group_privileges, restricted_not_authorized, CURR_USER_ID, login_required
-from ..models import db, Group, Membership, Post, User
+from ..models import db, Group, Membership, Post, User, Application, ApplicationUser
 from .. import forms
 from .. import random_phrases
 # from .. import secret
@@ -14,6 +14,9 @@ from .forms import CountryForm, ParticipantForm, EntryForm, EventForm, EventEntr
 import datetime
 from os import environ
 
+
+APPLICATION = Application.get_by_name('Eurovision API Manager')
+APPLICATION_ID = APPLICATION.id
 API_BASE_URL = environ.get('EUROVISION_API_BASE_URL')
 API_KEY = environ.get('EUROVISION_API_KEY')
 EVENT_TYPE_LIST = [('contest', 'Contest'), ('semi-final',
@@ -28,15 +31,17 @@ eurovision_bp = Blueprint(
     url_prefix='/eurovision'
 )
 
-# print(f"PARAMS: {params}", file=sys.stderr)
 
 
 def eurovision_mgmt_authorization_required(func):
     @wraps(func)
     def decorated_function(*args, **kwargs):
-        privileges = g.app_privileges
 
-        if privileges == None or not privileges['EUROVISION_MGMT'] or not privileges['EUROVISION_MGMT']['role'] == 'admin':
+        
+        app_user = ApplicationUser.get_active_appuser_by_ids(
+            APPLICATION_ID, g.user.id)
+        
+        if app_user == None:
             flash('You do not have access to this resource.', 'danger')
             return redirect('/home')
 

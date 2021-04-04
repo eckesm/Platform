@@ -1,4 +1,4 @@
-from app.models import db, generate_random_integer, User, Group, Membership, Post, CommentType, CommentType, AWSFileStorage
+from app.models import db, generate_random_integer, User, Group, Membership, Post, CommentType, CommentType, AWSFileStorage, Application, ApplicationUser
 from sqlalchemy.sql import func
 
 
@@ -19,7 +19,6 @@ def reseed_main_database():
     user1.object_pronoun = 'him'
     user1.profile_image_id = 'klb9kosj3x73zfatbhurp95tw'
     user1.role = 'administrator'
-    user1.app_privileges = '{"EUROVISION_MGMT":{"role":"admin","name":"Eurovision API","href":"/eurovision/manage"}}'
 
     user2 = User.register(first_name='John',
                           last_name='Latchaw',
@@ -31,7 +30,6 @@ def reseed_main_database():
     user2.object_pronoun = 'him'
     user2.profile_image_id = 'nxew011f4kcr7ngcbhjedrwdy'
     user2.header_image_url = 'https://images.unsplash.com/photo-1479502806991-251c94be6b15?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxleHBsb3JlLWZlZWR8MTN8fHxlbnwwfHx8&auto=format&fit=crop&w=500&q=60'
-    user2.app_privileges = '{"EUROVISION_MGMT":{"role":"admin","name":"Eurovision API","href":"/eurovision/manage"}}'
 
     user3 = User.register(first_name='Laura',
                           last_name='Eckes',
@@ -112,8 +110,6 @@ def reseed_main_database():
                             name='Alaska Bound!',
                             description='Solely devoted to remembering our trip to Alaska.',
                             members_add_users=True)
-    # db.session.add_all([group1, group2, group3, group4])
-    # db.session.commit()
 
     # Add and commit memberships.
     membership1 = Membership.register(member_id=user1.id,
@@ -206,9 +202,6 @@ def reseed_main_database():
                                        member_type='member',
                                        invited_by_id=user4.id,
                                        joined=func.now())
-    # db.session.add_all([membership1, membership2, membership3,
-    #                     membership4, membership5, membership6, membership7, membership8, membership9, membership10, membership11, membership12, membership13, membership14, membership15, membership16, membership17, membership18])
-    # db.session.commit()
 
     # Add and commit posts
     post1 = Post.register(owner_id=user1.id,
@@ -235,9 +228,6 @@ def reseed_main_database():
     post8 = Post.register(owner_id=user2.id,
                           group_id=group1.id,
                           content="Hahahahaha")
-    # db.session.add_all([post1, post2, post3, post4,
-    #                     post5, post6, post7, post8])
-    # db.session.commit()
 
     image1 = AWSFileStorage(id='klb9kosj3x73zfatbhurp95tw',
                             owner_id=user1.id,
@@ -268,6 +258,18 @@ def reseed_main_database():
 
     db.session.add_all([image1, image2, image3, image4, image5])
     db.session.commit()
+
+    application1 = Application.register(owner_id=user1.id,
+                                        name='Eurovision API Manager',
+                                        endpoint='eurovision/manage',
+                                        description='Application for managing the Eurovision API database at https://api.eurovisionapp.com.')
+
+    appuser1 = ApplicationUser.register(application_id=application1.id,
+                                        user_id=user1.id,
+                                        role='administrator')
+    appuser2 = ApplicationUser.register(application_id=application1.id,
+                                        user_id=user2.id,
+                                        role='user')
 
 
 with app.app_context():

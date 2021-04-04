@@ -4,7 +4,7 @@ from flask import current_app as app
 from flask_mail import Mail, Message
 from secrets import token_urlsafe
 from sqlalchemy.sql import func
-from ..models import db, User, Membership
+from ..models import db, User, Membership, ApplicationUser
 from .. import forms
 from .. import random_phrases
 
@@ -24,22 +24,23 @@ CURR_USER_ID = "curr_user"
 def add_user_to_g():
     """If logged in, add current user to Flask global."""
 
+    # session.pop('curr_user', None)
+    # session.pop('CURR_USER_ID', None)
+
     if CURR_USER_ID in session:
         g.user = User.get_by_id(session[CURR_USER_ID])
         g.memberships = Membership.get_memberships_info_by_user_sorted(
             session[CURR_USER_ID])
         g.group_invitations = Membership.get_invitations_by_user_sorted(
             session[CURR_USER_ID])
-        try:
-            g.app_privileges = g.user.get_app_privileges()
-        except:
-            return
+        g.applications = ApplicationUser.get_appuser_info_by_user_sorted(
+            session[CURR_USER_ID])
 
     else:
         g.user = None
         g.memberships = None
         g.group_invitations = None
-        g.app_privileges = None
+        g.applications = None
 
 #####################################################################
 # ----------------------- Access & Auxillary ---------------------- #

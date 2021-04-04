@@ -58,15 +58,14 @@ class Scorecard(db.Model):
 class User(db.Model):
     """User model for users table."""
 
-    # DEFAULT_PROFILE_URL='https://mre-platform.s3.us-east-2.amazonaws.com/default_user_profile_image'
     DEFAULT_PROFILE_URL = 'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fi0.wp.com%2Fwww.repol.copl.ulaval.ca%2Fwp-content%2Fuploads%2F2019%2F01%2Fdefault-user-icon.jpg&f=1&nofb=1'
 
     DEFAULT_HEADER_IMAGE_URL = 'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fvastphotos.com%2Ffiles%2Fuploads%2Fphotos%2F10446%2Fcozy-winter-scene-l.jpg&f=1&nofb=1'
 
     __tablename__ = 'users'
 
-    # id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    id = db.Column(db.String(25), primary_key=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    # id = db.Column(db.Integer, primary_key=True)
     email_address = db.Column(db.String(254), nullable=False, unique=True)
     email_confirm_token = db.Column(db.Text)
     is_email_confirmed = db.Column(db.Boolean, nullable=False, default=False)
@@ -85,7 +84,7 @@ class User(db.Model):
     created = db.Column(db.DateTime, nullable=False, default=func.now())
     updated = db.Column(db.DateTime, nullable=False, default=func.now())
     role = db.Column(db.Text, nullable=False, default='general')
-    app_privileges = db.Column(db.Text, nullable=True, default=None)
+    # app_privileges = db.Column(db.Text, nullable=True, default=None)
     status = db.Column(db.Text, nullable=False, default='active')
 
     groups_owner = db.relationship('Group', backref='owner',
@@ -101,6 +100,12 @@ class User(db.Model):
         'Group', secondary='memberships', backref='members')
     posts_view = db.relationship(
         'Post', secondary='groups', backref='viewers')
+
+    applications_owner = db.relationship(
+        'Application', backref='owner', cascade='all, delete-orphan')
+
+    applications = db.relationship(
+        'ApplicationUser', backref='user', cascade='all, delete-orphan')
 
     @ property
     def full_name(self):
@@ -174,7 +179,7 @@ class User(db.Model):
         hashed = bcrypt.generate_password_hash(password, rounds=14)
         hashed_utf = hashed.decode("utf8")
 
-        new_user = cls(id=generate_random_string(25, cls.get_by_id), first_name=first_name, last_name=last_name, email_address=email_address.lower(
+        new_user = cls(first_name=first_name, last_name=last_name, email_address=email_address.lower(
         ), username=username.lower(), password=hashed_utf, api_token=cls.generate_api_token())
         db.session.add(new_user)
         db.session.commit()
@@ -222,7 +227,7 @@ class Group(db.Model):
 
     # id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     id = db.Column(db.String(25), primary_key=True)
-    owner_id = db.Column(db.String(25), db.ForeignKey('users.id'))
+    owner_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     name = db.Column(db.String(100), nullable=False)
     description = db.Column(db.Text)
     members_add_users = db.Column(db.Boolean, nullable=False, default=False)
@@ -239,8 +244,7 @@ class Group(db.Model):
         'Comment', secondary='posts', backref='group')
 
     def __repr__(Self):
-        g = Self
-        return f"<Group id={g.id} | owner={g.owner.username} | name={g.name}>"
+        return f"<Group id={Self.id} | owner={Self.owner.username} | name={Self.name}>"
 
     def get_can_invite_list(self):
         can_invite_list = ['owner']
@@ -291,22 +295,20 @@ class Membership(db.Model):
 
     # id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     id = db.Column(db.String(25), primary_key=True)
-    member_id = db.Column(db.String(25), db.ForeignKey(
+    member_id = db.Column(db.Integer, db.ForeignKey(
         'users.id'), nullable=False)
     group_id = db.Column(db.String(25), db.ForeignKey(
         'groups.id'), nullable=False)
     member_type = db.Column(db.Text, nullable=False, default='invited')
     invited = db.Column(db.DateTime, nullable=False, default=func.now())
-    # can this be a foreign key???
-    invited_by_id = db.Column(db.String(25), nullable=False)
+    invited_by_id = db.Column(db.Integer, nullable=False)
     joined = db.Column(db.DateTime)
     created = db.Column(db.DateTime, nullable=False, default=func.now())
     updated = db.Column(db.DateTime, nullable=False, default=func.now())
     status = db.Column(db.Boolean, nullable=False, default=True)
 
     def __repr__(self):
-        m = self
-        return f"<Membership user={m.member.username}| group={m.group.name} | type={m.member_type}>"
+        return f"<Membership user={self.member.username}| group={self.group.name} | type={self.member_type}>"
 
     def serialize_invitation(self):
         """Returns a dict representation of some membership data."""
@@ -399,7 +401,7 @@ class Post(db.Model):
 
     # id=db.Column(db.Integer, primary_key=True, autoincrement=True)
     id = db.Column(db.String(25), primary_key=True)
-    owner_id = db.Column(db.String(25), db.ForeignKey('users.id'))
+    owner_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     group_id = db.Column(db.String(25), db.ForeignKey('groups.id'))
     content = db.Column(db.Text, nullable=False)
     created = db.Column(db.DateTime, nullable=False, default=func.now())
@@ -481,10 +483,10 @@ class Comment(db.Model):
 
     __tablename__ = 'comments'
 
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    owner_id = db.Column(db.String(25), db.ForeignKey('users.id'))
+    id = db.Column(db.String(25), primary_key=True)
+    owner_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     post_id = db.Column(db.String(25), db.ForeignKey('posts.id'))
-    type_id = db.Column(db.String(50), db.ForeignKey('comment_types.id'))
+    type_id = db.Column(db.String(25), db.ForeignKey('comment_types.id'))
     content = db.Column(db.Text)
     created = db.Column(db.DateTime, nullable=False, default=func.now())
     updated = db.Column(db.DateTime, nullable=False, default=func.now())
@@ -497,7 +499,7 @@ class AWSFileStorage(db.Model):
     __tablename__ = 'aws_file_storage'
 
     id = db.Column(db.String(25), primary_key=True)
-    owner_id = db.Column(db.String(25), db.ForeignKey('users.id'))
+    owner_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     url = db.Column(db.Text, nullable=False)
     file_type = db.Column(db.String(25), nullable=False)
     category = db.Column(db.String(25), nullable=False)
@@ -516,3 +518,79 @@ class AWSFileStorage(db.Model):
         db.session.add(new_file)
         db.session.commit()
         return new_file
+
+
+class Application(db.Model):
+    """Applications."""
+
+    __tablename__ = 'applications'
+
+    id = db.Column(db.String(25), primary_key=True)
+    owner_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    name = db.Column(db.String(100), nullable=False)
+    endpoint = db.Column(db.Text, nullable=False)
+    description = db.Column(db.Text)
+    created = db.Column(db.DateTime, nullable=False, default=func.now())
+    updated = db.Column(db.DateTime, nullable=False, default=func.now())
+    status = db.Column(db.String(25), nullable=False, default='active')
+
+    application_users = db.relationship('ApplicationUser', backref='application',
+                                        cascade='all, delete-orphan')
+
+    def __repr__(Self):
+        return f"<Application id={Self.id} | owner={Self.owner.username} | name={Self.name}>"
+
+    @classmethod
+    def register(cls, owner_id, name, endpoint, description):
+        new_app = cls(id=generate_random_string(25, cls.get_by_id),
+                      owner_id=owner_id, name=name, endpoint=endpoint, description=description)
+        db.session.add(new_app)
+        db.session.commit()
+        return new_app
+
+    @ classmethod
+    def get_by_id(cls, id):
+        return cls.query.filter_by(id=id).one_or_none()
+
+    @classmethod
+    def get_by_name(cls, name):
+        return cls.query.filter_by(name=name).one_or_none()
+
+
+class ApplicationUser(db.Model):
+    """Model for registering users to applications."""
+
+    __tablename__ = 'applications_users'
+
+    id = db.Column(db.String(25), primary_key=True)
+    application_id = db.Column(db.String(25), db.ForeignKey('applications.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    role = db.Column(db.Text, nullable=False, default='user')
+    created = db.Column(db.DateTime, nullable=False, default=func.now())
+    updated = db.Column(db.DateTime, nullable=False, default=func.now())
+    status = db.Column(db.String(25), nullable=False, default='active')
+
+    def __repr__(self):
+        return f"<ApplicationUser user={self.user.username}| group={self.application.name} | type={self.role}>"
+
+    @classmethod
+    def register(cls, application_id, user_id, role):
+        new_app_user = cls(id=generate_random_string(25, cls.get_by_id),
+                           application_id=application_id, user_id=user_id, role=role)
+        db.session.add(new_app_user)
+        db.session.commit()
+        return new_app_user
+
+    @ classmethod
+    def get_by_id(cls, id):
+        return cls.query.filter_by(id=id).one_or_none()
+
+    @ classmethod
+    def get_appuser_info_by_user_sorted(cls, user_id):
+        return db.session.query(Application.id, Application.endpoint, Application.name, ApplicationUser.role).filter(
+            ApplicationUser.user_id == user_id, ApplicationUser.status == 'active').join(ApplicationUser).order_by(Application.name).all()
+
+    @classmethod
+    def get_active_appuser_by_ids(cls, application_id, user_id):
+        return cls.query.filter_by(application_id=application_id,
+                                   user_id=user_id, status='active').one_or_none()
