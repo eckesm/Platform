@@ -1,9 +1,6 @@
 <div class="row justify-content-around">
 
-    <!-- CSRF Token -->
-    {{ form.hidden_tag() }}
-
-    <input type="hidden" name="next" value="{{request.args.get('next','')}}">
+    <input id="next" type="hidden" name="next" value="{{request.args.get('next','')}}">
 
     {% if token %}
     <input type="hidden" name="token" value="{{token}}">
@@ -36,7 +33,7 @@
     <!-- form buttons -->
   <div>
     <div class="d-flex justify-content-around">
-      <button type="submit" class="btn btn-primary btn">Submit</button>
+      <button id="login_submit" type="submit" class="btn btn-primary btn">Submit</button>
       <a href="/reset-password" class="my-auto"><i>Need to reset your password?</i></a>
     </div>  
   </div>

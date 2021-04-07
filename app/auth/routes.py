@@ -7,6 +7,7 @@ from sqlalchemy.sql import func
 from ..models import db, User, Membership, ApplicationUser
 from .. import forms
 from .. import random_phrases
+from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_required, JWTManager
 
 auth_bp = Blueprint(
     'auth_bp', __name__,
@@ -18,6 +19,7 @@ auth_bp = Blueprint(
 mail = Mail(app)
 app_url = app.config["PRODUCTION_DOMAIN"]
 CURR_USER_ID = "curr_user"
+jwt = JWTManager(app)
 
 
 @app.before_request
@@ -46,11 +48,24 @@ def add_user_to_g():
 # ----------------------- Access & Auxillary ---------------------- #
 #####################################################################
 
+@jwt.user_identity_loader
+def user_identity_lookup(user):
+    return user.id
+
+# -------------------------------------------------------------------
+
+@jwt.user_lookup_loader
+def user_lookup_callback(_jwt_header, jwt_data):
+    identity = jwt_data["sub"]
+    return User.get_by_id(identity)
+
+# -------------------------------------------------------------------
 
 def do_login(user):
     session[CURR_USER_ID] = user.id
     session.pop('new-user-entries', None)
 
+# -------------------------------------------------------------------
 
 def login_required(func):
     @wraps(func)
@@ -97,29 +112,32 @@ def login():
         password = form.password.data
         user = User.authenticate(email_address, password)
 
+        # If there is no user matching the entered email address...
         if user == None:
             flash(
                 f'There is no user with the email address {email_address}.  Please make sure you are entering the correct email address with the correct spelling.', 'warning')
             return redirect('/login')
 
+        # If the password is incorrect for the entered email address...
         if user == False:
             flash('Credentials entered were incorrect.  Please try again.',
                   'warning')
             return redirect('/login')
 
+        # If the user is authenticated...
         if user:
             do_login(user)
             g.user = user
-
             flash('Login successful!', 'info')
             session['greeting'] = random_phrases.welcome_at_login.get_phrase(
                 f"{g.user.first_name}")
 
-            next_url = request.form.get("next")
-            if next_url:
-                return redirect(next_url)
-            else:
-                return redirect('/home')
+            response = {
+                'message': f"Credentials for {email_address} were authenticated.",
+                'status': 'success',
+                'access_token': create_access_token(identity=user)
+            }
+            return jsonify(response)
 
     else:
         greeting = random_phrases.login_greetings.get_phrase()

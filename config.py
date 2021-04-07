@@ -12,6 +12,7 @@ class Config(object):
     SQLALCHEMY_ECHO = False
 
     SECRET_KEY = environ.get('SECRET_KEY')
+    JWT_SECRET_KEY = environ.get('JWT_SECRET_KEY')
     DEBUG_TB_INTERCEPT_REDIRECTS = False
 
     FLASK_ADMIN_SWATCH = 'cerulean'

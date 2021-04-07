@@ -213,6 +213,9 @@ class InviteToGroupForm(FlaskForm):
 class LoginForm(FlaskForm):
     """User login form."""
 
+    class Meta:
+        csrf = False
+
     email_address = StringField("Email address", validators=[
         InputRequired(message="Input required."),
         Email(
