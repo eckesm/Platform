@@ -325,6 +325,9 @@ class Membership(db.Model):
             'joined': self.joined
         }
 
+    def can_invite(self):
+        return self.member_type in self.group.get_can_invite_list()
+
     @classmethod
     def register(cls, member_id, group_id, member_type, invited_by_id, joined):
         new_membership = cls(id=generate_random_string(25, cls.get_by_id),

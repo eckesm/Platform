@@ -43,7 +43,7 @@ def create_app():
         debug = DebugToolbarExtension(app)
 
         admin = Admin(app, name='platform', template_mode='bootstrap3', index_view=AdminView(User,db.session,url='/admin', endpoint='admin'))
-        admin.add_view(ModelView(User, db.session))
+        # admin.add_view(ModelView(User, db.session))
         admin.add_view(ModelView(Group, db.session))
         admin.add_view(ModelView(Membership, db.session))
         admin.add_view(ModelView(Post, db.session))

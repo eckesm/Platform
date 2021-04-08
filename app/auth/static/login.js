@@ -4,7 +4,6 @@ async function login(email_address, password) {
 		password      : password
 	};
 	const response = await axios.post('/login', data);
-    console.log(response)
 
 	status = response['data']['status'];
 	message = response['data']['message'];
@@ -48,11 +47,6 @@ function saveUserCredentialsInLocalStorage() {
 ********************************************************************/
 
 checkForRememberedUser();
-
-// const form = document.querySelector('#login_form');
-// form.addEventListener('submit', () => {
-// 	saveUserCredentialsInLocalStorage();
-// });
 
 $('#login_submit').on('click', function(e) {
 	e.preventDefault();

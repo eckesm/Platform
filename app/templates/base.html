@@ -122,10 +122,10 @@
                   <span class="text-nowrap me-2"><a class="d-flex dropdown-item" href="/groups/{{invitation['group_id']}}">{{invitation['group_name']}}</a></span>
                   
                   <div class="d-flex">
-                    <span class="accept_invitation icon-link accept" data-invite_id="{{invitation['id']}}" data-group_id="{{invitation['group_id']}}" data-api_token="{{g.user.api_token}}" href="#">
+                    <span class="accept_invitation icon-link accept" data-invite_id="{{invitation['id']}}" data-group_id="{{invitation['group_id']}}" href="#">
                       <i class="fas fa-check-circle"></i>
                     </span>
-                    <span class="reject_invitation icon-link reject ms-1" data-invite_id="{{invitation['id']}}" data-group_id="{{invitation['group_id']}}" data-api_token="{{g.user.api_token}}" href="#">
+                    <span class="reject_invitation icon-link reject ms-1" data-invite_id="{{invitation['id']}}" data-group_id="{{invitation['group_id']}}" href="#">
                       <i class="fas fa-times-circle"></i>
                     </span>
                   </div>

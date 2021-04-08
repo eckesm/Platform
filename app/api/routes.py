@@ -1,8 +1,10 @@
 from flask import Flask, Blueprint, request, render_template, redirect, flash, session, make_response, jsonify, url_for
+from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_required, JWTManager
 from flask import current_app as app
 from sqlalchemy.sql import func
 from email_validator import validate_email, EmailNotValidError
 import requests
+from ..auth.routes import jwt
 from ..forms import PROHIBITED_USERNAMES
 from ..models import db, Group, Membership, User
 
@@ -92,16 +94,18 @@ def check_for_username():
 
 
 @ api_bp.route('/api/invitations/<invite_id>', methods=['PATCH'])
+@jwt_required()
 def accept_group_invitation_by_api(invite_id):
+
+    current_user = get_jwt_identity()
+    user = User.get_by_id(current_user)
 
     invitation = Membership.get_invitation_by_invite(invite_id)
     if invitation == None:
-        return jsonify(message=f"{invite_id} is not a valid invalid invitation.")
+        return jsonify(message=f"This is not a valid invalid invitation. [Invitation ID: {invite_id}]")
 
-    invited = User.get_by_id(invitation.member_id)
-    api_token = request.json['api_token']
-    if invited.api_token != api_token:
-        return jsonify(message=f"You are not authorized to respond to invitation {invite_id}.")
+    if invitation.member_id != user.id:
+        return jsonify(message=f"You are not authorized to respond to this invitation. [Invitation ID: {invite_id}]")
 
     else:
         reply = request.json['reply']
@@ -112,20 +116,20 @@ def accept_group_invitation_by_api(invite_id):
             invitation.joined = func.now()
             invitation.updated = func.now()
             db.session.commit()
-            return jsonify({'status': "successful", 'message': f"{member_name} has been added to {group_name}."})
+            return jsonify({'status': "successful", 'message': f"You are now a member of {group_name}"})
 
         elif reply == "reject":
             invitation.member_type = 'rejected'
             invitation.updated = func.now()
             db.session.commit()
-            return jsonify({'status': "successful", 'message': f"{member_name} declined the invitation to join {group_name}."})
+            return jsonify({'status': "successful", 'message': f"You declined the invitation to join {group_name}"})
 
         else:
             return jsonify({'status': "unsuccessful", 'message': f"The reply {reply} is not recognized."})
 
 # -------------------------------------------------------------------
 
-# NEED TO ENFORCE SOME SORT OF AUTHENTICATION
+# SHOULD USE JWT WHEN REACT IS IMPLEMENTS (RATHER THAN API TOKEN SETTING NOW)
 
 
 @ api_bp.route('/api/invitations', methods=['POST'])
@@ -138,7 +142,7 @@ def invite_member_to_group_by_api():
     if invited_by == None:
         data = {
             "status": "unsuccessful",
-            "message": f"The inviting user cannot be found for invited_by {invited_by}."
+            "message": f"The inviting user cannot be found. [Invited by ID: {invited_by}]"
         }
         return jsonify(data)
 
@@ -149,21 +153,30 @@ def invite_member_to_group_by_api():
         }
         return jsonify(data)
 
+    group_id = request.json['group_id']
+    invited_by_membership = Membership.get_membership_by_user_group(
+        invited_by_id, group_id)
+    if invited_by_membership.can_invite() == False:
+        data = {
+            "status": "unsuccessful",
+            "message": "You are not permitted to issue invitations based on the group invitation settings."
+        }
+        return jsonify(data)
+
     member_id = request.json['member_id']
     member = User.get_by_id(member_id)
     if member == None:
         data = {
             "status": "unsuccessful",
-            "message": f"The invited user cannot be found for member_id {member_id}."
+            "message": f"The invited user cannot be found. [Member ID: {member_id}]"
         }
         return jsonify(data)
 
-    group_id = request.json['group_id']
     group = Group.get_by_id(group_id)
     if group == None:
         data = {
             "status": "unsuccessful",
-            "message": f"The group cannot be found for group_id {group_id}."
+            "message": f"The group cannot be found. [Group ID: {group_id}]"
         }
         return jsonify(data)
 
@@ -171,7 +184,7 @@ def invite_member_to_group_by_api():
         member_id, group_id)
     if existing_member != None and existing_member.member_type in ['member', 'owner']:
         return jsonify({"status": "existing member",
-                        "message": f"{existing_member.member.full_name} is already a member of {existing_member.group.name}.",
+                        "message": f"{existing_member.member.full_name} is already a member of {existing_member.group.name}",
                         "invitation": existing_member.serialize_invitation()})
 
     else:
@@ -179,12 +192,12 @@ def invite_member_to_group_by_api():
             member_id, group_id)
         if existing_invitation != None:
             return jsonify({"status": "existing pending invitation",
-                            "message": f"There is already a pending invitation for {existing_invitation.member.full_name} to join {existing_invitation.group.name}.",
+                            "message": f"There is already a pending invitation for {existing_invitation.member.full_name} to join {existing_invitation.group.name}",
                             "invitation": existing_invitation.serialize_invitation()})
 
         else:
             new_invitation = Membership.register(
                 member_id=member_id, group_id=group_id, member_type='invited', invited_by_id=invited_by_id, joined=None)
             return jsonify({"status": "successful",
-                            "message": f"{new_invitation.member.full_name} has been invited to {new_invitation.group.name}.",
+                            "message": f"{new_invitation.member.full_name} has been invited to {new_invitation.group.name}",
                             "invitation": new_invitation.serialize_invitation()})

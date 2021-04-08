@@ -2,13 +2,14 @@
 ----------------------- Responding to Invitations -------------------
 ********************************************************************/
 
-async function respond_invitation(invite_id, group_id, api_token, reply, invitation) {
-	data = {
-		reply   : reply,
-		api_token : api_token
+async function respond_invitation(invite_id, group_id, reply, invitation) {
+	headers = {
+		Authorization : 'Bearer ' + localStorage.getItem('access_token')
 	};
-	const response = await axios.patch(`/api/invitations/${invite_id}`, data);
-	console.log(response.data.status);
+	data = {
+		reply   : reply
+	};
+	const response = await axios.patch(`/api/invitations/${invite_id}`, data, { headers: headers });
 	const status = response.data.status;
 	const message = response.data.message;
 
@@ -25,7 +26,7 @@ async function respond_invitation(invite_id, group_id, api_token, reply, invitat
 	if (reply === 'reject') {
 		const check_current_location = `/groups/${group_id}`;
 		if (window.location.pathname === check_current_location) {
-			window.location.href = '/user/home';
+			window.location.href = '/home';
 		}
 	}
 }
@@ -48,19 +49,19 @@ function adjust_invitation_dropdown() {
 $('.accept_invitation').click(function() {
 	const invite_id = $(this).data('invite_id');
 	const group_id = $(this).data('group_id');
-	const api_token = $(this).data('api_token');
 	const invitation = $(this).parent().parent();
-	respond_invitation(invite_id, group_id, api_token, 'accept', invitation);
+	respond_invitation(invite_id, group_id, 'accept', invitation);
 });
 
 $('.reject_invitation').click(function() {
 	const invite_id = $(this).data('invite_id');
 	const group_id = $(this).data('group_id');
-	const api_token = $(this).data('api_token');
 	const invitation = $(this).parent().parent();
-	respond_invitation(invite_id, group_id, api_token, 'reject', invitation);
+	respond_invitation(invite_id, group_id, 'reject', invitation);
 });
 
-$('#logout_button').click(function() {
+$('#logout_button').click(function(e) {
+	e.preventDefault()
+	localStorage.removeItem('access_token')
 	$('#logout_form').submit();
 });
